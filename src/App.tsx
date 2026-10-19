@@ -8,6 +8,7 @@ import { Cursor } from './components/Cursor'
 import { Preloader } from './components/Preloader'
 import { Hero } from './sections/Hero'
 import { Manifesto } from './sections/Manifesto'
+import { Music } from './sections/Music'
 
 export function App() {
   const { lang, setLang } = useLang()
@@ -29,6 +30,7 @@ export function App() {
       <Cursor />
       <Hero data={t.hero} ui={t.ui} lang={lang} onLang={setLang} />
       <Manifesto data={t.manifesto} />
+      <Music data={t.music} />
     </>
   )
 }

@@ -29,13 +29,23 @@ export function Reel({ data, ui }: { data: Content['reel']; ui: Content['ui'] })
   if (broken) {
     return (
       <section id="reel">
-        <div style={{ width: '100%', aspectRatio: '16 / 9', background: 'var(--line)' }} />
+        <div
+          style={{ width: '100%', aspectRatio: '9 / 16', maxHeight: '85svh', background: 'var(--line)' }}
+        />
       </section>
     )
   }
 
   return (
-    <section id="reel" style={{ position: 'relative' }}>
+    <section
+      id="reel"
+      style={{
+        position: 'relative',
+        display: 'flex',
+        justifyContent: 'center',
+        paddingBlock: 'var(--rhythm)',
+      }}
+    >
       <video
         ref={video}
         data-testid="reel-video"
@@ -47,7 +57,8 @@ export function Reel({ data, ui }: { data: Content['reel']; ui: Content['ui'] })
         autoPlay={!reduced}
         controls={reduced}
         onError={() => setBroken(true)}
-        style={{ width: '100%', aspectRatio: '16 / 9', objectFit: 'cover', display: 'block' }}
+        // Съёмка вертикальная: вписываем целиком, а не обрезаем по бокам.
+        style={{ width: 'auto', maxWidth: '100%', maxHeight: '85svh', display: 'block' }}
       />
 
       <button

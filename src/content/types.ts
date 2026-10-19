@@ -13,7 +13,13 @@ export type Track = {
 
 export type Show = { date: string; city: string; venue: string; upcoming: boolean }
 
-export type Item = { name: string; price: string | null; image: string; alt: string }
+export type Item = {
+  name: string
+  price: string | null
+  image: string
+  kind: 'image' | 'video'
+  alt: string
+}
 
 export type Shot = { src: string; kind: 'image' | 'video'; alt: string }
 

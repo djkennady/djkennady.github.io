@@ -27,6 +27,15 @@ export default function FabricScene({
   const { viewport } = useThree()
   const cover = Math.max(viewport.width / PLANE_W, viewport.height / PLANE_H) * 1.15
 
+  // Доля ширины полотна, которую занимает принт, и соответствующая ей доля
+  // высоты — чтобы картинка не сплющивалась вместе с плоскостью.
+  const printScale = useMemo(() => {
+    const image = texture.image as { width?: number; height?: number } | undefined
+    const imageAspect = image?.width && image?.height ? image.width / image.height : 1
+    const width = 0.42
+    return new Vector2(width, (width * (PLANE_W / PLANE_H)) / imageAspect)
+  }, [texture])
+
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
@@ -36,8 +45,9 @@ export default function FabricScene({
       uBg: { value: new Color(tokens.bg) },
       uTexture: { value: texture },
       uHasTexture: { value: textureUrl ? 1 : 0 },
+      uPrintScale: { value: printScale },
     }),
-    [texture, textureUrl, tokens.fg, tokens.bg],
+    [texture, textureUrl, tokens.fg, tokens.bg, printScale],
   )
 
   useFrame((state, delta) => {

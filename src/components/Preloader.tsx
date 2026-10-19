@@ -67,9 +67,18 @@ export function Preloader({ onDone }: { onDone: () => void }) {
         transition: `opacity ${DUR.fast}s linear`,
       }}
     >
-      <span className="mono" style={{ fontSize: 'clamp(2rem, 8vw, 5rem)', letterSpacing: '0.02em' }}>
-        {String(progress).padStart(3, '0')}
-      </span>
+      <div style={{ display: 'grid', justifyItems: 'center', gap: 'clamp(20px, 4vh, 44px)' }}>
+        <img
+          src="/media/kennady-logo.png"
+          alt=""
+          width={420}
+          height={280}
+          style={{ width: 'min(60vw, 320px)', height: 'auto' }}
+        />
+        <span className="mono" style={{ fontSize: 'clamp(1rem, 3vw, 1.5rem)', letterSpacing: '0.08em' }}>
+          {String(progress).padStart(3, '0')}
+        </span>
+      </div>
     </div>
   )
 }

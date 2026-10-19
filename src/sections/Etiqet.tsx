@@ -49,8 +49,9 @@ export function Etiqet({ data, ui }: { data: Content['etiqet']; ui: Content['ui'
               <li key={item.name}>
                 <Media
                   src={item.image}
-                  kind="image"
+                  kind={item.kind}
                   alt={item.alt}
+                  autoPlay
                   style={{ width: '100%', aspectRatio: '4 / 5', objectFit: 'cover', display: 'block' }}
                 />
                 <p className="mono" style={{ margin: '0.9em 0 0' }}>

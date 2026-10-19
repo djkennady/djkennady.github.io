@@ -34,6 +34,7 @@ export const fabricFragment = /* glsl */ `
   uniform vec3 uBg;
   uniform sampler2D uTexture;
   uniform float uHasTexture;
+  uniform vec2 uPrintScale;
 
   varying vec2 vUv;
   varying float vWave;
@@ -45,9 +46,15 @@ export const fabricFragment = /* glsl */ `
     // крупный текст цветом --fg, и контраст должен остаться читаемым.
     vec3 base = mix(uBg, uFg, shade * shade * 0.42);
 
-    vec4 tex = texture2D(uTexture, vUv);
+    // Принт кладётся по центру полотна в своих пропорциях, а не растягивается
+    // на всю плоскость, и за своими границами просто не рисуется.
+    vec2 uv = (vUv - 0.5) / uPrintScale + 0.5;
+    float inside =
+        step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
+
+    vec4 tex = texture2D(uTexture, clamp(uv, 0.0, 1.0));
     vec3 printed = tex.rgb * (0.4 + shade * 0.75);
 
-    gl_FragColor = vec4(mix(base, printed, uHasTexture * tex.a), 1.0);
+    gl_FragColor = vec4(mix(base, printed, uHasTexture * tex.a * inside), 1.0);
   }
 `

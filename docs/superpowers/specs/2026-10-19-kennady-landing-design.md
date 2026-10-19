@@ -161,7 +161,8 @@ CSS-переменные (`--bg`, `--fg`, `--muted`, `--line`), которые G
 ### Сетка и ритм
 
 12 колонок на десктопе, 4 на мобильном, гаттер `clamp(16px, 2vw, 32px)`.
-Вертикальный ритм секций — `clamp(96px, 14vh, 220px)`.
+Вертикальный ритм секций — `clamp(96px, 14vh, 220px)`. Гаттер и ритм —
+такие же переменные в `index.css`, как и цвета.
 
 ### Зерно
 
@@ -270,6 +271,7 @@ type Item   = { name: string; price: string | null; image: string; alt: string }
 type Shot   = { src: string; kind: 'image' | 'video'; alt: string }
 
 type Content = {
+  ui:        { onRequest: string; copied: string; soundOn: string; soundOff: string; scrollHint: string }
   hero:      { name: string; realName: string; city: string; ctaBooking: string; ctaBrand: string }
   manifesto: { lines: string[]; facts: { value: string; label: string }[] }
   music:     { title: string; tracks: Track[] }
@@ -279,6 +281,11 @@ type Content = {
   contact:   { bookingEmail: string; telegram: string; socials: Social[] }
 }
 ```
+
+Блок `ui` — короткие интерфейсные строки («по запросу», «скопировано»,
+подписи кнопки звука, подсказка о скролле). Они тоже переводятся, и в
+коде их нельзя писать литералом: иначе английская версия поедет с
+русскими словами.
 
 Медиа лежат в `public/media/`, модели в `public/models/`, статичные
 3D-фоллбэки в `public/fallback/`.
@@ -297,11 +304,12 @@ kennady-site/
     styles/index.css          — токены, шрифты, базовые слои
     content/
       content.ts              — единственный файл, который правит Егор
+      content.test.ts         — паритет ключей ru/en
       types.ts
     i18n/
+      resolveLang.ts
+      resolveLang.test.ts     — приоритеты выбора языка
       useLang.ts
-      useLang.test.ts
-      dictionary.test.ts      — паритет ключей ru/en
     lib/
       deviceTier.ts
       deviceTier.test.ts
@@ -359,11 +367,11 @@ Vercel, статическая сборка, продакшен с ветки `m
 
 Автотесты (Vitest, пишутся до кода):
 
-1. `dictionary.test.ts` — ключи `ru` и `en` совпадают, пустых строк нет,
-   все `url` начинаются с `http` или `mailto:`.
+1. `content/content.test.ts` — ключи `ru` и `en` совпадают, пустых строк
+   нет, все `url` начинаются с `http` или `mailto:`.
 2. `deviceTier.test.ts` — таблица из §6.3 воспроизводится на
    подставных значениях; `prefers-reduced-motion` всегда даёт `low`.
-3. `useLang.test.ts` — приоритет `?lang=` над `localStorage`,
+3. `i18n/resolveLang.test.ts` — приоритет `?lang=` над `localStorage`,
    `localStorage` над `navigator.language`, запись в `<html lang>`.
 
 Проверка в браузере (через превью, со скриншотами):

@@ -25,3 +25,14 @@ it('каждая ссылка в новое окно защищена noopener',
     expect(a.getAttribute('rel') ?? '', a.getAttribute('href') ?? '').toContain('noopener')
   }
 })
+
+it('у каждой кнопки есть доступное имя из слов, а не из значка', () => {
+  render(<App />)
+  for (const button of screen.getAllByRole('button')) {
+    expect(button).toHaveAccessibleName()
+    // Один глиф вроде «↗» формально считается именем, но вслух это
+    // «стрелка на северо-восток» и ничего не говорит о действии.
+    const name = button.getAttribute('aria-label') ?? button.textContent ?? ''
+    expect(name, name).toMatch(/\p{L}{2,}/u)
+  }
+})

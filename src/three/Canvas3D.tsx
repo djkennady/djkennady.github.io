@@ -9,11 +9,14 @@ import {
 } from 'react'
 import { detectTier, readEnv, tierSettings, type Tier, type TierSettings } from '../lib/deviceTier'
 import { SceneBoundary } from './SceneBoundary'
+import { readToken } from './readToken'
 
 // three и R3F живут только здесь, за ленивым импортом.
 const Stage = lazy(() => import('./Stage'))
 
-export type SceneProps = { settings: TierSettings }
+export type SceneTokens = { fg: string; bg: string }
+
+export type SceneProps = { settings: TierSettings; tokens: SceneTokens }
 
 let cached: Tier | null = null
 
@@ -50,16 +53,26 @@ export function Canvas3D<P extends object>({
   const [mounted, setMounted] = useState(false)
   const [lost, setLost] = useState(false)
   const [broken, setBroken] = useState(false)
+  // Палитра берётся с хоста: у блока бренда она своя, светлая.
+  const [tokens, setTokens] = useState<SceneTokens>({ fg: 'white', bg: 'black' })
 
   const live = settings.render3d && !lost
 
   // Браузер может отобрать WebGL-контекст на ходу. Возврата нет: дальше
   // показываем картинку, а не чёрную дыру на месте сцены.
+  // Слушаем на фазе перехвата: браузер шлёт webglcontextlost на сам канвас,
+  // и это событие не всплывает — до window в фазе всплытия оно не дойдёт.
   useEffect(() => {
     if (!live) return
     const onLost = () => setLost(true)
-    window.addEventListener('webglcontextlost', onLost)
-    return () => window.removeEventListener('webglcontextlost', onLost)
+    window.addEventListener('webglcontextlost', onLost, true)
+    return () => window.removeEventListener('webglcontextlost', onLost, true)
+  }, [live])
+
+  useEffect(() => {
+    const el = host.current
+    if (!live || !el) return
+    setTokens({ fg: readToken('--fg', el), bg: readToken('--bg', el) })
   }, [live])
 
   useEffect(() => {
@@ -78,7 +91,7 @@ export function Canvas3D<P extends object>({
     return () => io.disconnect()
   }, [live])
 
-  const sceneProps2 = { ...sceneProps, settings } as P & SceneProps
+  const sceneProps2 = { ...sceneProps, settings, tokens } as P & SceneProps
 
   return (
     <div

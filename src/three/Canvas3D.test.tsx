@@ -42,8 +42,12 @@ it('после потери WebGL-контекста показывает кар
     <Canvas3D tier="high" scene={LazyStub} sceneProps={{}} fallbackSrc="/fallback/hero.webp" fallbackAlt="" />,
   )
   intersect(true)
-  await screen.findByTestId('r3f-canvas')
-  fireEvent(window, new Event('webglcontextlost'))
+  const canvas = await screen.findByTestId('r3f-canvas')
+
+  // Браузер шлёт webglcontextlost на сам канвас, и это событие НЕ всплывает.
+  // Диспатчим туда же, куда шлёт браузер, а не туда, куда подписан код.
+  fireEvent(canvas, new Event('webglcontextlost'))
+
   expect(await screen.findByRole('presentation', { hidden: true })).toBeInTheDocument()
   expect(screen.queryByTestId('r3f-canvas')).toBeNull()
 })

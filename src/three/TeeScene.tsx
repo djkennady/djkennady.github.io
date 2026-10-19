@@ -78,11 +78,12 @@ function Tee({ url, printUrl }: { url: string; printUrl: string | null }) {
 
 export default function TeeScene({
   settings,
+  tokens,
   modelUrl,
   printUrl,
 }: SceneProps & { modelUrl: string | null; printUrl: string | null }) {
   const source = pickTeeSource(modelUrl)
-  const fabric = <FabricScene settings={settings} textureUrl={printUrl ?? undefined} />
+  const fabric = <FabricScene settings={settings} tokens={tokens} textureUrl={printUrl ?? undefined} />
 
   if (source.kind === 'fabric') return fabric
 

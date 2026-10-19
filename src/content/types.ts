@@ -22,6 +22,7 @@ export type Content = {
    *  иначе английская версия поедет с русскими словами. */
   ui: {
     onRequest: string
+    copy: string
     copied: string
     soundOn: string
     soundOff: string

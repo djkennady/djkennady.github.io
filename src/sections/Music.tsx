@@ -30,7 +30,7 @@ export function Music({ data }: { data: Content['music'] }) {
                 onClick={() => setOpen(track.num)}
                 style={{
                   appearance: 'none',
-                  background: 'none',
+                  backgroundColor: 'transparent',
                   border: 0,
                   width: '100%',
                   padding: 'clamp(18px, 3vh, 36px) 0',
@@ -41,6 +41,12 @@ export function Music({ data }: { data: Content['music'] }) {
                   cursor: 'pointer',
                   textAlign: 'left',
                   font: 'inherit',
+                  // Постер стоит вместо плеера, пока по треку не кликнули:
+                  // чужие скрипты не грузятся на старте.
+                  backgroundImage: `url(${track.poster})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  paddingInline: 'clamp(12px, 2vw, 24px)',
                 }}
               >
                 <span className="mono" style={{ color: 'var(--muted)' }}>

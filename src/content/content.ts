@@ -6,6 +6,7 @@ export const content: Record<Lang, Content> = {
   ru: {
     ui: {
       onRequest: 'по запросу',
+      copy: 'Скопировать',
       copied: 'Скопировано',
       soundOn: 'Включить звук',
       soundOff: 'Выключить звук',
@@ -108,6 +109,7 @@ export const content: Record<Lang, Content> = {
   en: {
     ui: {
       onRequest: 'on request',
+      copy: 'Copy',
       copied: 'Copied',
       soundOn: 'Sound on',
       soundOff: 'Sound off',

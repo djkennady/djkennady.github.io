@@ -40,6 +40,7 @@ export function Contact({ data, ui }: { data: Content['contact']; ui: Content['u
       <button
         type="button"
         data-testid={testId}
+        aria-label={`${ui.copy}: ${value}`}
         onClick={() => void copy(value)}
         className="mono"
         style={{

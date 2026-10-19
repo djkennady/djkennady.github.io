@@ -23,3 +23,11 @@ it('пустой список треков скрывает секцию цел�
   const { container } = render(<Music data={{ ...data, tracks: [] }} />)
   expect(container.querySelector('#music')).toBeNull()
 })
+
+it('до клика на месте плеера стоит постер трека', () => {
+  render(<Music data={data} />)
+  const btn = screen.getByRole('button', { name: new RegExp(data.tracks[0].title, 'i') })
+  // jsdom не вычисляет background-image из инлайнового стиля, поэтому
+  // смотрим на сам атрибут.
+  expect(btn.getAttribute('style')).toContain(data.tracks[0].poster)
+})

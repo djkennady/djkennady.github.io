@@ -20,7 +20,9 @@ export function Marquee({ items }: { items: string[] }) {
       ease: 'none',
     })
 
-    return () => tween.kill()
+    return () => {
+      tween.kill()
+    }
   }, [reduced, items.length])
 
   return (

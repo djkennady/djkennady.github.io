@@ -36,13 +36,12 @@ export function mockCoarsePointer(value: boolean): void {
 }
 
 // Lenis и drei требуют ResizeObserver, которого в jsdom нет.
-if (!('ResizeObserver' in window)) {
-  window.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  } as unknown as typeof ResizeObserver
+class ResizeObserverStub {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
 }
+globalThis.ResizeObserver ??= ResizeObserverStub as unknown as typeof ResizeObserver
 
 afterEach(() => {
   media.reduce = false

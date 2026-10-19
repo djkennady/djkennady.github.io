@@ -4,8 +4,7 @@ import { TextureLoader, Vector2, type ShaderMaterial } from 'three'
 import { Color } from 'three'
 import type { SceneProps } from './Canvas3D'
 import { fabricFragment, fabricVertex } from './fabric.glsl'
-import { fabricAmplitude } from './fabricAmplitude'
-import { heroProgress } from '../lib/motion'
+import { sceneAmplitude } from './fabricAmplitude'
 import { BLANK } from './blankTexture'
 
 const PLANE_W = 8
@@ -15,7 +14,8 @@ export default function FabricScene({
   settings,
   tokens,
   textureUrl,
-}: SceneProps & { textureUrl?: string }) {
+  progress,
+}: SceneProps & { textureUrl?: string; progress?: { value: number } }) {
   const material = useRef<ShaderMaterial>(null)
   const texture = useLoader(TextureLoader, textureUrl ?? BLANK)
   const smoothed = useRef(new Vector2())
@@ -45,7 +45,7 @@ export default function FabricScene({
     if (!u) return
 
     u.uTime.value += delta
-    u.uAmplitude.value = fabricAmplitude(heroProgress.value)
+    u.uAmplitude.value = sceneAmplitude(progress)
 
     // Курсор догоняется плавно: резкий скачок полотна выглядит дёшево.
     smoothed.current.lerp(

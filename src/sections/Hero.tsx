@@ -59,7 +59,7 @@ export function Hero({ data, ui, lang, onLang }: Props) {
     >
       <Canvas3D
         scene={FabricScene}
-        sceneProps={{}}
+        sceneProps={{ progress: heroProgress }}
         fallbackSrc="/fallback/hero.webp"
         fallbackAlt=""
       />

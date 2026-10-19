@@ -94,4 +94,19 @@ body {
   .section {
     padding-block: var(--rhythm);
   }
+
+  /* Манифест: первая строка — заявление, остальные — текст под ним. */
+  #manifesto p {
+    max-width: 26ch;
+    margin: 0 0 0.6em;
+    font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+    color: var(--muted);
+  }
+
+  #manifesto p.display {
+    max-width: 18ch;
+    font-size: clamp(2rem, 6vw, 5rem);
+    margin-bottom: 0.4em;
+    color: var(--fg);
+  }
 }

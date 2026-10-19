@@ -1,4 +1,5 @@
 import {
+  lazy,
   Suspense,
   useEffect,
   useRef,
@@ -6,8 +7,10 @@ import {
   type ComponentType,
   type LazyExoticComponent,
 } from 'react'
-import { Canvas } from '@react-three/fiber'
 import { detectTier, readEnv, tierSettings, type Tier, type TierSettings } from '../lib/deviceTier'
+
+// three и R3F живут только здесь, за ленивым импортом.
+const Stage = lazy(() => import('./Stage'))
 
 export type SceneProps = { settings: TierSettings }
 
@@ -89,20 +92,11 @@ export function Canvas3D<P extends object>({
     >
       {live
         ? mounted && (
-            <Canvas
-              dpr={settings.dpr}
-              // Пока секция в экране — рендерим; ушла — рендер-луп встаёт,
-              // чтобы не греть телефон.
-              frameloop={visible ? 'always' : 'never'}
-              gl={{ antialias: true, powerPreference: 'high-performance' }}
-              // R3F по умолчанию ставит touch-action: none, и тогда по
-              // первому экрану нельзя проскроллить страницу пальцем.
-              style={{ touchAction: interactive ? 'pan-y' : 'none' }}
-            >
-              <Suspense fallback={null}>
+            <Suspense fallback={null}>
+              <Stage settings={settings} visible={visible} interactive={interactive}>
                 <Scene {...sceneProps2} />
-              </Suspense>
-            </Canvas>
+              </Stage>
+            </Suspense>
           )
         : !broken && (
             <img

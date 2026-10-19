@@ -1,24 +1,31 @@
 import { useMemo, useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
-import { useTexture } from '@react-three/drei'
-import { Vector2, type ShaderMaterial } from 'three'
+import { useFrame, useLoader, useThree } from '@react-three/fiber'
+import { TextureLoader, Vector2, type ShaderMaterial } from 'three'
 import type { SceneProps } from './Canvas3D'
 import { fabricFragment, fabricVertex } from './fabric.glsl'
 import { fabricAmplitude } from './fabricAmplitude'
 import { heroProgress } from '../lib/motion'
 import { tokenColor } from './readToken'
 
-// Прозрачный пиксель: useTexture нельзя звать условно, поэтому текстура есть
+const PLANE_W = 8
+const PLANE_H = 5
+
+// Прозрачный пиксель: загрузчик нельзя звать условно, поэтому текстура есть
 // всегда, а шейдер решает по uHasTexture, показывать её или нет.
 const BLANK =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII='
 
 export default function FabricScene({ settings, textureUrl }: SceneProps & { textureUrl?: string }) {
   const material = useRef<ShaderMaterial>(null)
-  const texture = useTexture(textureUrl ?? BLANK)
+  const texture = useLoader(TextureLoader, textureUrl ?? BLANK)
   const smoothed = useRef(new Vector2())
 
   const segments = Math.max(16, settings.segments)
+
+  // Полотно должно закрывать экран при любом соотношении сторон, поэтому
+  // геометрия фиксированная, а меш масштабируется под вьюпорт.
+  const { viewport } = useThree()
+  const cover = Math.max(viewport.width / PLANE_W, viewport.height / PLANE_H) * 1.15
 
   const uniforms = useMemo(
     () => ({
@@ -53,18 +60,14 @@ export default function FabricScene({ settings, textureUrl }: SceneProps & { tex
   })
 
   return (
-    <>
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[2, 3, 4]} intensity={1.1} />
-      <mesh>
-        <planeGeometry args={[8, 5, segments, segments]} />
-        <shaderMaterial
-          ref={material}
-          vertexShader={fabricVertex}
-          fragmentShader={fabricFragment}
-          uniforms={uniforms}
-        />
-      </mesh>
-    </>
+    <mesh scale={[cover, cover, 1]}>
+      <planeGeometry args={[PLANE_W, PLANE_H, segments, segments]} />
+      <shaderMaterial
+        ref={material}
+        vertexShader={fabricVertex}
+        fragmentShader={fabricFragment}
+        uniforms={uniforms}
+      />
+    </mesh>
   )
 }

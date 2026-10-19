@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
-import { useGLTF, useTexture } from '@react-three/drei'
-import type { Group, Mesh, MeshStandardMaterial } from 'three'
+import { useFrame, useLoader } from '@react-three/fiber'
+import { TextureLoader, type Group, type Mesh, type MeshStandardMaterial } from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import type { SceneProps } from './Canvas3D'
 import FabricScene from './FabricScene'
 import { SceneBoundary } from './SceneBoundary'
@@ -11,8 +11,8 @@ const AUTO_SPIN = 0.25
 const DRAG_SENSITIVITY = 0.01
 
 function Tee({ url, printUrl }: { url: string; printUrl: string }) {
-  const { scene } = useGLTF(url)
-  const print = useTexture(printUrl)
+  const { scene } = useLoader(GLTFLoader, url)
+  const print = useLoader(TextureLoader, printUrl)
   const group = useRef<Group>(null)
   const taken = useRef(false)
   const dragging = useRef(false)

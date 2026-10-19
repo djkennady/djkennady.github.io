@@ -6,11 +6,19 @@ import type { Content } from '../content/types'
 
 const TeeScene = lazy(() => import('../three/TeeScene'))
 
-export function Etiqet({ data, ui }: { data: Content['etiqet']; ui: Content['ui'] }) {
+export function Etiqet({
+  data,
+  ui,
+  index = '03',
+}: {
+  data: Content['etiqet']
+  ui: Content['ui']
+  index?: string
+}) {
   return (
     <section id="etiqet" className="section day day-panel">
       <div className="shell">
-        <SectionHeading index="03">{data.title}</SectionHeading>
+        <SectionHeading index={index}>{data.title}</SectionHeading>
       </div>
 
       <div

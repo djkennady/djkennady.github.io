@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { SectionHeading } from '../components/SectionHeading'
 import type { Content } from '../content/types'
 
-export function Music({ data }: { data: Content['music'] }) {
+export function Music({ data, index = '01' }: { data: Content['music']; index?: string }) {
   const [open, setOpen] = useState<string | null>(null)
 
   // Нечего показывать — нет и секции: пустая рамка хуже её отсутствия.
@@ -10,7 +10,7 @@ export function Music({ data }: { data: Content['music'] }) {
 
   return (
     <section id="music" className="shell section">
-      <SectionHeading index="01">{data.title}</SectionHeading>
+      <SectionHeading index={index}>{data.title}</SectionHeading>
 
       <ul style={{ listStyle: 'none', margin: 0, padding: 0, borderTop: '1px solid var(--line)' }}>
         {data.tracks.map((track) => (

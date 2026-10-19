@@ -33,7 +33,7 @@ function ShowList({ items, testId }: { items: Show[]; testId?: string }) {
   )
 }
 
-export function Shows({ data }: { data: Content['shows'] }) {
+export function Shows({ data, index = '02' }: { data: Content['shows']; index?: string }) {
   const section = useRef<HTMLElement>(null)
   const track = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
@@ -92,7 +92,7 @@ export function Shows({ data }: { data: Content['shows'] }) {
           }}
         >
           <div className="shell">
-            <SectionHeading index="02">{data.title}</SectionHeading>
+            <SectionHeading index={index}>{data.title}</SectionHeading>
           </div>
 
           <div style={{ overflowX: reduced ? 'auto' : 'hidden' }}>
@@ -120,14 +120,18 @@ export function Shows({ data }: { data: Content['shows'] }) {
         </div>
       </section>
 
-      <div className="shell" style={{ paddingBlock: 'var(--rhythm)' }}>
-        {upcoming.length > 0 && (
-          <div style={{ marginBottom: 'clamp(32px, 6vh, 80px)' }}>
-            <ShowList items={upcoming} testId="upcoming" />
-          </div>
-        )}
-        <ShowList items={past} />
-      </div>
+      {/* Нет ни одной даты — нет и блока: иначе остаются две пустоты вокруг
+          пустого списка. */}
+      {data.list.length > 0 && (
+        <div className="shell" style={{ paddingBlock: 'var(--rhythm)' }}>
+          {upcoming.length > 0 && (
+            <div style={{ marginBottom: 'clamp(32px, 6vh, 80px)' }}>
+              <ShowList items={upcoming} testId="upcoming" />
+            </div>
+          )}
+          {past.length > 0 && <ShowList items={past} />}
+        </div>
+      )}
     </>
   )
 }

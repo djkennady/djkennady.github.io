@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { content } from './content/content'
 import { useLang } from './i18n/useLang'
+import { sectionIndex } from './lib/sectionIndex'
 import { initLenis } from './lib/lenis'
 import { useReducedMotion } from './lib/useReducedMotion'
 import { Grain } from './components/Grain'
@@ -22,6 +23,10 @@ export function App() {
 
   const t = content[lang]
 
+  // Блок музыки скрывается, пока нет сетов, поэтому номера секций считаются
+  // по тем, что действительно отрисованы.
+  const visible = [...(t.music.tracks.length > 0 ? ['music'] : []), 'shows', 'etiqet']
+
   useEffect(() => {
     const lenis = initLenis(reduced)
     return () => lenis?.destroy()
@@ -34,9 +39,9 @@ export function App() {
       <Cursor />
       <Hero data={t.hero} ui={t.ui} lang={lang} onLang={setLang} />
       <Manifesto data={t.manifesto} />
-      <Music data={t.music} />
-      <Shows data={t.shows} />
-      <Etiqet data={t.etiqet} ui={t.ui} />
+      <Music data={t.music} index={sectionIndex(visible, 'music')} />
+      <Shows data={t.shows} index={sectionIndex(visible, 'shows')} />
+      <Etiqet data={t.etiqet} ui={t.ui} index={sectionIndex(visible, 'etiqet')} />
       <Reel data={t.reel} ui={t.ui} />
       <Contact data={t.contact} ui={t.ui} />
     </>

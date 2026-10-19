@@ -1,7 +1,5 @@
 import type { Content, Lang } from './types'
 
-const SC = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'
-
 export const content: Record<Lang, Content> = {
   ru: {
     ui: {
@@ -15,50 +13,25 @@ export const content: Record<Lang, Content> = {
     hero: {
       name: 'DJ Kennady',
       realName: 'Егор Морозов',
-      city: 'Москва',
+      city: 'Набережные Челны',
       ctaBooking: 'Букинг',
       ctaBrand: 'ETIQET',
     },
     manifesto: {
       lines: [
-        'Я ставлю музыку и шью одежду.',
+        'Я ставлю музыку и делаю одежду.',
         'Это одна работа, просто разными руками.',
-        'На деке решаешь, каким будет вечер. За машинкой — каким будет утро после него.',
+        'За вертушками решаешь, каким будет вечер. В бренде — каким будет утро после него.',
       ],
       facts: [
-        { value: '7', label: 'лет за деком' },
-        { value: '14', label: 'городов' },
-        { value: '2', label: 'дропа ETIQET' },
+        { value: '10', label: 'лет за вертушками' },
+        { value: '7', label: 'городов' },
+        { value: '4', label: 'дропа ETIQET' },
       ],
     },
     music: {
       title: 'Сеты',
-      tracks: [
-        {
-          num: '01',
-          title: 'Ночная смена',
-          length: '58:20',
-          platform: 'soundcloud',
-          embedUrl: `${SC}1000000001`,
-          poster: '/media/track-01.webp',
-        },
-        {
-          num: '02',
-          title: 'Гараж на Сходне',
-          length: '1:12:04',
-          platform: 'soundcloud',
-          embedUrl: `${SC}1000000002`,
-          poster: '/media/track-02.webp',
-        },
-        {
-          num: '03',
-          title: 'ETIQET Drop 02 Mix',
-          length: '41:37',
-          platform: 'soundcloud',
-          embedUrl: `${SC}1000000003`,
-          poster: '/media/track-03.webp',
-        },
-      ],
+      tracks: [],
     },
     shows: {
       title: 'Где играл',
@@ -79,20 +52,19 @@ export const content: Record<Lang, Content> = {
         { src: '/media/portrait-profile.jpg', kind: 'image', alt: 'Егор в профиль, тёплый свет сбоку' },
       ],
       list: [
-        { date: '2026-11-07', city: 'Москва', venue: 'Мутабор', upcoming: true },
-        { date: '2026-11-22', city: 'Санкт-Петербург', venue: 'Присутствие', upcoming: true },
-        { date: '2026-09-27', city: 'Москва', venue: 'NEFTЬ', upcoming: false },
-        { date: '2026-08-16', city: 'Казань', venue: 'Werk', upcoming: false },
-        { date: '2026-07-12', city: 'Сочи', venue: 'Ровесник', upcoming: false },
-        { date: '2026-06-21', city: 'Нижний Новгород', venue: 'Сияние', upcoming: false },
-        { date: '2026-05-30', city: 'Екатеринбург', venue: 'Фабрика', upcoming: false },
-        { date: '2026-04-18', city: 'Москва', venue: 'Выход', upcoming: false },
+        {
+          date: '2026-10-23',
+          city: 'Набережные Челны',
+          venue: 'LAKI · вечеринка MTV',
+          upcoming: true,
+        },
+        { date: '2026-10-24', city: 'Набережные Челны', venue: 'The Bird', upcoming: true },
       ],
     },
     etiqet: {
       title: 'ETIQET',
       text: 'Минимализм, качество, стиль. 100% хлопок, ограниченное количество, первые партии уже скоро. ETIQET — не просто одежда, это напоминание.',
-      instagramUrl: 'https://instagram.com/etiqet',
+      instagramUrl: 'https://www.instagram.com/dj_kennady/',
       model: null,
       print: '/media/etiqet-wordmark.png',
       items: [
@@ -114,13 +86,11 @@ export const content: Record<Lang, Content> = {
     },
     reel: { src: '/media/reel.mp4', poster: '/media/reel-poster.jpg' },
     contact: {
-      bookingEmail: 'booking@djkennady.ru',
+      bookingEmail: 'djkennady96@gmail.com',
       telegram: '@djkennady',
       socials: [
-        { label: 'Instagram', url: 'https://instagram.com/djkennady' },
-        { label: 'SoundCloud', url: 'https://soundcloud.com/djkennady' },
+        { label: 'Instagram', url: 'https://www.instagram.com/dj_kennady/' },
         { label: 'Telegram', url: 'https://t.me/djkennady' },
-        { label: 'YouTube', url: 'https://youtube.com/@djkennady' },
       ],
     },
   },
@@ -136,7 +106,7 @@ export const content: Record<Lang, Content> = {
     hero: {
       name: 'DJ Kennady',
       realName: 'Egor Morozov',
-      city: 'Moscow',
+      city: 'Naberezhnye Chelny',
       ctaBooking: 'Booking',
       ctaBrand: 'ETIQET',
     },
@@ -144,42 +114,17 @@ export const content: Record<Lang, Content> = {
       lines: [
         'I play records and I make clothes.',
         'Same job, different hands.',
-        'Behind the decks you decide how the night goes. Behind the sewing machine, how the morning after looks.',
+        'Behind the turntables you decide how the night goes. In the brand, how the morning after looks.',
       ],
       facts: [
-        { value: '7', label: 'years behind the decks' },
-        { value: '14', label: 'cities' },
-        { value: '2', label: 'ETIQET drops' },
+        { value: '10', label: 'years on the turntables' },
+        { value: '7', label: 'cities' },
+        { value: '4', label: 'ETIQET drops' },
       ],
     },
     music: {
       title: 'Sets',
-      tracks: [
-        {
-          num: '01',
-          title: 'Night Shift',
-          length: '58:20',
-          platform: 'soundcloud',
-          embedUrl: `${SC}1000000001`,
-          poster: '/media/track-01.webp',
-        },
-        {
-          num: '02',
-          title: 'Garage on Skhodnya',
-          length: '1:12:04',
-          platform: 'soundcloud',
-          embedUrl: `${SC}1000000002`,
-          poster: '/media/track-02.webp',
-        },
-        {
-          num: '03',
-          title: 'ETIQET Drop 02 Mix',
-          length: '41:37',
-          platform: 'soundcloud',
-          embedUrl: `${SC}1000000003`,
-          poster: '/media/track-03.webp',
-        },
-      ],
+      tracks: [],
     },
     shows: {
       title: 'Played at',
@@ -200,20 +145,19 @@ export const content: Record<Lang, Content> = {
         { src: '/media/portrait-profile.jpg', kind: 'image', alt: 'Egor in profile, warm side light' },
       ],
       list: [
-        { date: '2026-11-07', city: 'Moscow', venue: 'Mutabor', upcoming: true },
-        { date: '2026-11-22', city: 'Saint Petersburg', venue: 'Prisutstvie', upcoming: true },
-        { date: '2026-09-27', city: 'Moscow', venue: 'NEFT', upcoming: false },
-        { date: '2026-08-16', city: 'Kazan', venue: 'Werk', upcoming: false },
-        { date: '2026-07-12', city: 'Sochi', venue: 'Rovesnik', upcoming: false },
-        { date: '2026-06-21', city: 'Nizhny Novgorod', venue: 'Siyanie', upcoming: false },
-        { date: '2026-05-30', city: 'Yekaterinburg', venue: 'Fabrika', upcoming: false },
-        { date: '2026-04-18', city: 'Moscow', venue: 'Vykhod', upcoming: false },
+        {
+          date: '2026-10-23',
+          city: 'Naberezhnye Chelny',
+          venue: 'LAKI · MTV party',
+          upcoming: true,
+        },
+        { date: '2026-10-24', city: 'Naberezhnye Chelny', venue: 'The Bird', upcoming: true },
       ],
     },
     etiqet: {
       title: 'ETIQET',
       text: 'Minimalism, quality, style. 100% cotton, limited edition, first batches coming soon. ETIQET is not just clothing, it is a reminder.',
-      instagramUrl: 'https://instagram.com/etiqet',
+      instagramUrl: 'https://www.instagram.com/dj_kennady/',
       model: null,
       print: '/media/etiqet-wordmark.png',
       items: [
@@ -235,13 +179,11 @@ export const content: Record<Lang, Content> = {
     },
     reel: { src: '/media/reel.mp4', poster: '/media/reel-poster.jpg' },
     contact: {
-      bookingEmail: 'booking@djkennady.ru',
+      bookingEmail: 'djkennady96@gmail.com',
       telegram: '@djkennady',
       socials: [
-        { label: 'Instagram', url: 'https://instagram.com/djkennady' },
-        { label: 'SoundCloud', url: 'https://soundcloud.com/djkennady' },
+        { label: 'Instagram', url: 'https://www.instagram.com/dj_kennady/' },
         { label: 'Telegram', url: 'https://t.me/djkennady' },
-        { label: 'YouTube', url: 'https://youtube.com/@djkennady' },
       ],
     },
   },

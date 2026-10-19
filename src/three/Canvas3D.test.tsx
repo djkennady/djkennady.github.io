@@ -77,3 +77,21 @@ it('интерактивная сцена оставляет вертикаль�
   intersect(true)
   expect(await screen.findByTestId('r3f-canvas')).toHaveStyle({ touchAction: 'pan-y' })
 })
+
+it('сцена, упавшая на загрузке файла, не уносит секцию — остаётся картинка', async () => {
+  const Broken = lazy(async () => ({
+    default: () => {
+      throw new Error('Could not load /media/print.webp')
+    },
+  }))
+  // React печатает пойманное исключение в консоль — это ожидаемо здесь.
+  const quiet = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+  render(
+    <Canvas3D tier="high" scene={Broken} sceneProps={{}} fallbackSrc="/f.webp" fallbackAlt="" />,
+  )
+  intersect(true)
+
+  expect(await screen.findByRole('presentation', { hidden: true })).toBeInTheDocument()
+  quiet.mockRestore()
+})

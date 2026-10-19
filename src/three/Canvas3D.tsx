@@ -8,6 +8,7 @@ import {
   type LazyExoticComponent,
 } from 'react'
 import { detectTier, readEnv, tierSettings, type Tier, type TierSettings } from '../lib/deviceTier'
+import { SceneBoundary } from './SceneBoundary'
 
 // three и R3F живут только здесь, за ленивым импортом.
 const Stage = lazy(() => import('./Stage'))
@@ -92,11 +93,13 @@ export function Canvas3D<P extends object>({
     >
       {live
         ? mounted && (
-            <Suspense fallback={null}>
-              <Stage settings={settings} visible={visible} interactive={interactive}>
-                <Scene {...sceneProps2} />
-              </Stage>
-            </Suspense>
+            <SceneBoundary fallback={null} onError={() => setLost(true)}>
+              <Suspense fallback={null}>
+                <Stage settings={settings} visible={visible} interactive={interactive}>
+                  <Scene {...sceneProps2} />
+                </Stage>
+              </Suspense>
+            </SceneBoundary>
           )
         : !broken && (
             <img

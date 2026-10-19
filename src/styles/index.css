@@ -1,0 +1,97 @@
+@import 'tailwindcss';
+
+/* Заголовки */
+@import '@fontsource/unbounded/latin-700.css';
+@import '@fontsource/unbounded/latin-800.css';
+@import '@fontsource/unbounded/cyrillic-700.css';
+@import '@fontsource/unbounded/cyrillic-800.css';
+/* Текст */
+@import '@fontsource/inter-tight/latin-400.css';
+@import '@fontsource/inter-tight/latin-500.css';
+@import '@fontsource/inter-tight/cyrillic-400.css';
+@import '@fontsource/inter-tight/cyrillic-500.css';
+/* Подписи и цифры */
+@import '@fontsource/jetbrains-mono/latin-400.css';
+@import '@fontsource/jetbrains-mono/cyrillic-400.css';
+
+:root {
+  /* Ночь — режим по умолчанию */
+  --bg: #0A0A0A;
+  --fg: #F5F5F5;
+  --muted: #8A8A8A;
+  --line: #2E2E2E;
+
+  --font-display: 'Unbounded', system-ui, sans-serif;
+  --font-body: 'Inter Tight', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --gutter: clamp(16px, 2vw, 32px);
+  --rhythm: clamp(96px, 14vh, 220px);
+}
+
+/* День — блок бренда. Переключается атрибутом на <html>, а значения
+   между режимами интерполирует GSAP, поэтому никаких CSS-переходов. */
+:root[data-mode='day'] {
+  --bg: #E8E6E1;
+  --fg: #0A0A0A;
+  --muted: #6B6864;
+  --line: #C4C1BC;
+}
+
+* {
+  min-width: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.4;
+  transition: none;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+}
+
+@layer components {
+  .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.88;
+    text-transform: uppercase;
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: clamp(0.6875rem, 0.8vw, 0.8125rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .shell {
+    padding-inline: var(--gutter);
+    margin-inline: auto;
+    max-width: 1680px;
+  }
+
+  .section {
+    padding-block: var(--rhythm);
+  }
+}

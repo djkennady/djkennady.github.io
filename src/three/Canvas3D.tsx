@@ -24,6 +24,9 @@ type Props<P> = {
   fallbackSrc: string
   fallbackAlt: string
   tier?: Tier
+  /** Сцену можно хватать и вращать. По умолчанию нет: фоновая сцена не должна
+   *  перехватывать касания и клики у страницы. */
+  interactive?: boolean
 }
 
 /** Единственная точка входа в 3D. Решает за секцию, что показать: живую сцену
@@ -35,6 +38,7 @@ export function Canvas3D<P extends object>({
   fallbackSrc,
   fallbackAlt,
   tier,
+  interactive = false,
 }: Props<P>) {
   const settings = tierSettings(tier ?? resolveTier())
   const host = useRef<HTMLDivElement>(null)
@@ -73,7 +77,16 @@ export function Canvas3D<P extends object>({
   const sceneProps2 = { ...sceneProps, settings } as P & SceneProps
 
   return (
-    <div ref={host} aria-hidden="true" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+    <div
+      ref={host}
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        pointerEvents: interactive ? 'auto' : 'none',
+      }}
+    >
       {live
         ? mounted && (
             <Canvas
@@ -82,6 +95,9 @@ export function Canvas3D<P extends object>({
               // чтобы не греть телефон.
               frameloop={visible ? 'always' : 'never'}
               gl={{ antialias: true, powerPreference: 'high-performance' }}
+              // R3F по умолчанию ставит touch-action: none, и тогда по
+              // первому экрану нельзя проскроллить страницу пальцем.
+              style={{ touchAction: interactive ? 'pan-y' : 'none' }}
             >
               <Suspense fallback={null}>
                 <Scene {...sceneProps2} />

@@ -7,8 +7,10 @@ import { intersect } from '../test/setup'
 // Под проверкой не рендерер, а политика обёртки: картинка или сцена, когда
 // сцена монтируется и что происходит при потере контекста.
 vi.mock('@react-three/fiber', () => ({
-  Canvas: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="r3f-canvas">{children}</div>
+  Canvas: ({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) => (
+    <div data-testid="r3f-canvas" style={style}>
+      {children}
+    </div>
   ),
 }))
 
@@ -52,4 +54,26 @@ it('404 на картинке-фоллбэке не оставляет биту�
   )
   fireEvent.error(img()!)
   expect(img()).toBeNull()
+})
+
+it('сцена-фон не перехватывает касания и клики', () => {
+  const { container } = render(
+    <Canvas3D tier="high" scene={LazyStub} sceneProps={{}} fallbackSrc="/f.webp" fallbackAlt="" />,
+  )
+  expect(container.firstChild).toHaveStyle({ pointerEvents: 'none' })
+})
+
+it('интерактивная сцена оставляет вертикальный скролл странице', async () => {
+  render(
+    <Canvas3D
+      tier="high"
+      interactive
+      scene={LazyStub}
+      sceneProps={{}}
+      fallbackSrc="/f.webp"
+      fallbackAlt=""
+    />,
+  )
+  intersect(true)
+  expect(await screen.findByTestId('r3f-canvas')).toHaveStyle({ touchAction: 'pan-y' })
 })

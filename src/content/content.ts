@@ -19,9 +19,9 @@ export const content: Record<Lang, Content> = {
     },
     manifesto: {
       lines: [
-        'Я ставлю музыку и делаю одежду.',
-        'Это одна работа, просто разными руками.',
-        'За вертушками решаешь, каким будет вечер. В бренде — каким будет утро после него.',
+        'Я играю музыку и создаю одежду.',
+        'И в том, и в другом — мой вкус, мой ритм и то, как я чувствую людей.',
+        'Что-то хочется услышать ещё раз. Что-то — носить каждый день.',
       ],
       facts: [
         { value: '10', label: 'лет за вертушками' },
@@ -112,9 +112,9 @@ export const content: Record<Lang, Content> = {
     },
     manifesto: {
       lines: [
-        'I play records and I make clothes.',
-        'Same job, different hands.',
-        'Behind the turntables you decide how the night goes. In the brand, how the morning after looks.',
+        'I play music and I make clothes.',
+        'Both carry my taste, my rhythm and the way I read a room.',
+        'Some of it you want to hear again. Some of it you want to wear every day.',
       ],
       facts: [
         { value: '10', label: 'years on the turntables' },

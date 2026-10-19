@@ -12,6 +12,8 @@ import { Manifesto } from './sections/Manifesto'
 import { Music } from './sections/Music'
 import { Shows } from './sections/Shows'
 import { Etiqet } from './sections/Etiqet'
+import { Reel } from './sections/Reel'
+import { Contact } from './sections/Contact'
 
 export function App() {
   const { lang, setLang } = useLang()
@@ -43,6 +45,8 @@ export function App() {
       <Music data={t.music} />
       <Shows data={t.shows} />
       <Etiqet data={t.etiqet} ui={t.ui} />
+      <Reel data={t.reel} ui={t.ui} />
+      <Contact data={t.contact} ui={t.ui} />
     </>
   )
 }

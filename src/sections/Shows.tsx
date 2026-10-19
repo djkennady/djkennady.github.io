@@ -22,15 +22,7 @@ function ShowList({ items, testId }: { items: Show[]; testId?: string }) {
       {items.map((s) => (
         <li
           key={`${s.date}-${s.venue}`}
-          className="mono"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(90px, auto) 1fr auto',
-            gap: '1em',
-            padding: '0.9em 0',
-            borderBottom: '1px solid var(--line)',
-            color: s.upcoming ? 'var(--fg)' : 'var(--muted)',
-          }}
+          className={`mono show-row${s.upcoming ? ' is-upcoming' : ''}`}
         >
           <span>{date(s.date)}</span>
           <span>{s.city}</span>

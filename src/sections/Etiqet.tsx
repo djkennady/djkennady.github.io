@@ -6,14 +6,9 @@ import type { Content } from '../content/types'
 
 const TeeScene = lazy(() => import('../three/TeeScene'))
 
-// Модели пока нет — сцена сама падает в ткань с принтом. Как только GLB
-// появится в public/models, достаточно поменять эту строку.
-const TEE_MODEL: string | null = null
-const TEE_PRINT = '/media/print.webp'
-
 export function Etiqet({ data, ui }: { data: Content['etiqet']; ui: Content['ui'] }) {
   return (
-    <section id="etiqet" className="section">
+    <section id="etiqet" className="section day day-panel">
       <div className="shell">
         <SectionHeading index="03">{data.title}</SectionHeading>
       </div>
@@ -28,7 +23,7 @@ export function Etiqet({ data, ui }: { data: Content['etiqet']; ui: Content['ui'
         <Canvas3D
           interactive
           scene={TeeScene}
-          sceneProps={{ modelUrl: TEE_MODEL, printUrl: TEE_PRINT }}
+          sceneProps={{ modelUrl: data.model, printUrl: data.print }}
           fallbackSrc="/fallback/tee.webp"
           fallbackAlt=""
         />

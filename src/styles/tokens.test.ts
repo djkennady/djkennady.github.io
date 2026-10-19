@@ -2,7 +2,7 @@ import { readFileSync, globSync } from 'node:fs'
 
 const css = readFileSync('src/styles/index.css', 'utf8')
 const NIGHT = { '--bg': '#0A0A0A', '--fg': '#F5F5F5', '--muted': '#8A8A8A', '--line': '#2E2E2E' }
-const DAY = { '--bg': '#E8E6E1', '--fg': '#0A0A0A', '--muted': '#6B6864', '--line': '#C4C1BC' }
+const DAY = { '--bg': '#E8E6E1', '--fg': '#0A0A0A', '--muted': '#6A6763', '--line': '#C4C1BC' }
 
 it('объявляет все четыре токена в ночном режиме с точными значениями', () => {
   for (const [t, v] of Object.entries(NIGHT)) expect(css).toMatch(new RegExp(`${t}:\\s*${v}`, 'i'))

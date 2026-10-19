@@ -31,7 +31,16 @@ export type Content = {
   manifesto: { lines: string[]; facts: { value: string; label: string }[] }
   music: { title: string; tracks: Track[] }
   shows: { title: string; shots: Shot[]; list: Show[] }
-  etiqet: { title: string; text: string; instagramUrl: string; items: Item[] }
+  etiqet: {
+    title: string
+    text: string
+    instagramUrl: string
+    /** GLB-модель футболки и файл принта. null — штатное состояние: сцена
+     *  тогда показывает ткань и не пытается грузить несуществующий файл. */
+    model: string | null
+    print: string | null
+    items: Item[]
+  }
   reel: { src: string; poster: string }
   contact: { bookingEmail: string; telegram: string; socials: Social[] }
 }

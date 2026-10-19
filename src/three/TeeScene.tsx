@@ -6,19 +6,22 @@ import type { SceneProps } from './Canvas3D'
 import FabricScene from './FabricScene'
 import { SceneBoundary } from './SceneBoundary'
 import { pickTeeSource } from './pickTeeSource'
+import { BLANK } from './blankTexture'
 
 const AUTO_SPIN = 0.25
 const DRAG_SENSITIVITY = 0.01
 
-function Tee({ url, printUrl }: { url: string; printUrl: string }) {
+function Tee({ url, printUrl }: { url: string; printUrl: string | null }) {
   const { scene } = useLoader(GLTFLoader, url)
-  const print = useLoader(TextureLoader, printUrl)
+  // Загрузчик нельзя звать условно: без принта берём прозрачный пиксель.
+  const print = useLoader(TextureLoader, printUrl ?? BLANK)
   const group = useRef<Group>(null)
   const taken = useRef(false)
   const dragging = useRef(false)
   const lastX = useRef(0)
 
   useEffect(() => {
+    if (!printUrl) return
     scene.traverse((o) => {
       const mesh = o as Mesh
       if (!mesh.isMesh) return
@@ -26,7 +29,7 @@ function Tee({ url, printUrl }: { url: string; printUrl: string }) {
       material.map = print
       material.needsUpdate = true
     })
-  }, [scene, print])
+  }, [scene, print, printUrl])
 
   // Слушаем окно, а не меш: палец или курсор может уйти за пределы модели,
   // и вращение не должно на этом обрываться.
@@ -77,9 +80,9 @@ export default function TeeScene({
   settings,
   modelUrl,
   printUrl,
-}: SceneProps & { modelUrl: string | null; printUrl: string }) {
+}: SceneProps & { modelUrl: string | null; printUrl: string | null }) {
   const source = pickTeeSource(modelUrl)
-  const fabric = <FabricScene settings={settings} textureUrl={printUrl} />
+  const fabric = <FabricScene settings={settings} textureUrl={printUrl ?? undefined} />
 
   if (source.kind === 'fabric') return fabric
 

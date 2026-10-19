@@ -84,6 +84,8 @@ export const content: Record<Lang, Content> = {
       title: 'ETIQET',
       text: 'Одежда, которую я делаю для тех же людей, для которых ставлю музыку. Небольшие партии, плотный хлопок, принты, которые не стираются после пятой стирки. Новый дроп уходит за выходные.',
       instagramUrl: 'https://instagram.com/etiqet',
+      model: null,
+      print: null,
       items: [
         { name: 'Футболка Night Shift', price: '4 900 ₽', image: '/media/item-01.webp', alt: 'Чёрная футболка с принтом на спине' },
         { name: 'Худи Drop 02', price: '9 400 ₽', image: '/media/item-02.webp', alt: 'Серое худи с вышивкой на груди' },
@@ -184,6 +186,8 @@ export const content: Record<Lang, Content> = {
       title: 'ETIQET',
       text: 'Clothes I make for the same people I play for. Small runs, heavy cotton, prints that survive more than five washes. A new drop is gone over a weekend.',
       instagramUrl: 'https://instagram.com/etiqet',
+      model: null,
+      print: null,
       items: [
         { name: 'Night Shift tee', price: '49 EUR', image: '/media/item-01.webp', alt: 'Black tee with a back print' },
         { name: 'Drop 02 hoodie', price: '94 EUR', image: '/media/item-02.webp', alt: 'Grey hoodie with chest embroidery' },

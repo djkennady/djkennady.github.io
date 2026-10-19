@@ -6,6 +6,7 @@ export function Reel({ data, ui }: { data: Content['reel']; ui: Content['ui'] })
   const video = useRef<HTMLVideoElement>(null)
   const reduced = useReducedMotion()
   const [muted, setMuted] = useState(true)
+  const [broken, setBroken] = useState(false)
 
   // Видео играет только пока оно на экране.
   useEffect(() => {
@@ -23,6 +24,16 @@ export function Reel({ data, ui }: { data: Content['reel']; ui: Content['ui'] })
     return () => io.disconnect()
   }, [reduced])
 
+  // Файла может не быть — тогда на его месте ровный блок, а не чёрная дыра
+  // с кнопкой звука, которой нечем управлять.
+  if (broken) {
+    return (
+      <section id="reel">
+        <div style={{ width: '100%', aspectRatio: '16 / 9', background: 'var(--line)' }} />
+      </section>
+    )
+  }
+
   return (
     <section id="reel" style={{ position: 'relative' }}>
       <video
@@ -35,6 +46,7 @@ export function Reel({ data, ui }: { data: Content['reel']; ui: Content['ui'] })
         playsInline
         autoPlay={!reduced}
         controls={reduced}
+        onError={() => setBroken(true)}
         style={{ width: '100%', aspectRatio: '16 / 9', objectFit: 'cover', display: 'block' }}
       />
 

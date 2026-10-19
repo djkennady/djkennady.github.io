@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Монохром. Акцентного цвета нет. Цвет берётся только из CSS-переменных `--bg`, `--fg`, `--muted`, `--line`; hex-литералов вне `src/styles/index.css` быть не должно.
-- Ночь: `--bg: #0A0A0A`, `--fg: #F5F5F5`, `--muted: #8A8A8A`, `--line: #2E2E2E`. День: `--bg: #E8E6E1`, `--fg: #0A0A0A`, `--muted: #6B6864`, `--line: #C4C1BC`.
+- Ночь: `--bg: #0A0A0A`, `--fg: #F5F5F5`, `--muted: #8A8A8A`, `--line: #2E2E2E`. День: `--bg: #E8E6E1`, `--fg: #0A0A0A`, `--muted: #6A6763`, `--line: #C4C1BC`.
 - Шрифты только локально через `@fontsource`, подмножества `latin` + `cyrillic`, `font-display: swap`. Заголовки — Unbounded 700–800, отрицательный трекинг. Текст — Inter Tight 400/500. Подписи, даты и цифры — JetBrains Mono 400, uppercase, трекинг `+0.08em`.
 - `prefers-reduced-motion: reduce` выключает всё движение: Lenis не инициализируется, ScrollTrigger-анимации дают мгновенное конечное состояние, автоплей видео снят, 3D заменяется статичными WebP. Страница остаётся полностью пользуемой.
 - Высота героя — `100svh`, не `vh`.

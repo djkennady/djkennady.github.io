@@ -6,14 +6,10 @@ import { fabricFragment, fabricVertex } from './fabric.glsl'
 import { fabricAmplitude } from './fabricAmplitude'
 import { heroProgress } from '../lib/motion'
 import { tokenColor } from './readToken'
+import { BLANK } from './blankTexture'
 
 const PLANE_W = 8
 const PLANE_H = 5
-
-// Прозрачный пиксель: загрузчик нельзя звать условно, поэтому текстура есть
-// всегда, а шейдер решает по uHasTexture, показывать её или нет.
-const BLANK =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII='
 
 export default function FabricScene({ settings, textureUrl }: SceneProps & { textureUrl?: string }) {
   const material = useRef<ShaderMaterial>(null)

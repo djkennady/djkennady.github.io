@@ -6,7 +6,10 @@ import type { Content } from '../content/types'
 const big: React.CSSProperties = {
   color: 'var(--fg)',
   textDecoration: 'none',
-  fontSize: 'clamp(1.5rem, 5vw, 4rem)',
+  // Почта длинная, а шрифт крупный: без переноса она вылезает за экран на 320.
+  fontSize: 'clamp(1.0625rem, 4.4vw, 4rem)',
+  overflowWrap: 'anywhere',
+  minWidth: 0,
 }
 
 export function Contact({ data, ui }: { data: Content['contact']; ui: Content['ui'] }) {

@@ -29,12 +29,15 @@
   --rhythm: clamp(96px, 14vh, 220px);
 }
 
-/* День — блок бренда. Переключается атрибутом на <html>, а значения
-   между режимами интерполирует GSAP, поэтому никаких CSS-переходов. */
+/* День — блок бренда. Это не режим всей страницы, а собственная палитра
+   одной секции: ETIQET вырезан из ночи как отдельный светлый разворот.
+   Интерполяции токенов нет намеренно — на полпути фон и текст сходились
+   в один серый и текст переставал читаться. */
+.day,
 :root[data-mode='day'] {
   --bg: #E8E6E1;
   --fg: #0A0A0A;
-  --muted: #6B6864;
+  --muted: #6A6763;
   --line: #C4C1BC;
 }
 
@@ -93,6 +96,53 @@ body {
 
   .section {
     padding-block: var(--rhythm);
+  }
+
+  /* Светлый разворот бренда. Края растушёваны, поэтому переход из ночи
+     читается как проявление панели, а не как стык. В зонах растушёвки
+     текста нет: их закрывает собственный вертикальный ритм секции. */
+  .day-panel {
+    background: linear-gradient(
+      to bottom,
+      transparent 0,
+      var(--bg) 12vh,
+      var(--bg) calc(100% - 12vh),
+      transparent 100%
+    );
+    color: var(--fg);
+  }
+
+  /* Список дат. На узком экране площадка уезжает на вторую строку: втроём в
+     одну строку мононабор не помещается и выносит вёрстку за экран. */
+  .show-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 1em;
+    row-gap: 0.25em;
+    padding: 0.9em 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    overflow-wrap: anywhere;
+  }
+
+  .show-row.is-upcoming {
+    color: var(--fg);
+  }
+
+  .show-row > :last-child {
+    grid-column: 2;
+    color: var(--muted);
+  }
+
+  @media (min-width: 720px) {
+    .show-row {
+      grid-template-columns: minmax(96px, auto) 1fr auto;
+    }
+
+    .show-row > :last-child {
+      grid-column: auto;
+      text-align: right;
+    }
   }
 
   /* Манифест: первая строка — заявление, остальные — текст под ним. */

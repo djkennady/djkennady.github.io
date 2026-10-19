@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "verify": "tsc --noEmit && vitest run"
+    "verify": "tsc --noEmit && vitest run",
+    "budget": "vite build && node scripts/check-budget.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^9.8.2",

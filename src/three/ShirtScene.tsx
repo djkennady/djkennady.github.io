@@ -1,72 +1,17 @@
 import { useMemo, useRef } from 'react'
 import { useFrame, useLoader } from '@react-three/fiber'
-import {
-  Color,
-  DoubleSide,
-  ExtrudeGeometry,
-  Shape,
-  TextureLoader,
-  type BufferAttribute,
-  type Group,
-} from 'three'
-import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import { Color, DoubleSide, TextureLoader, type Group } from 'three'
 import type { SceneTokens } from './Canvas3D'
-import { SHIRT, neckBottom, shirtOutline } from './shirtOutline'
+import { buildShirtGeometry } from './shirtGeometry'
+import { torsoProfile } from './shirtProfile'
 import { BLANK } from './blankTexture'
-import { clampSpin } from './clampSpin'
 
-const DEPTH = 0.26
-const AUTO_SPIN = 0.5
+const AUTO_SPIN = 0.22
 const DRAG_SENSITIVITY = 0.008
-
-/** Силуэт превращается в объёмную деталь, после чего вершины слегка
- *  выгибаются: плоская выдавленная фигура читается как картон, а не как
- *  ткань. */
-function buildGeometry() {
-  const shape = new Shape()
-  const outline = shirtOutline()
-  const [startX, startY] = outline[0]
-
-  shape.moveTo(startX, startY)
-  for (const [x, y] of outline.slice(1)) shape.lineTo(x, y)
-
-  // Горловина: плавный вырез обратно к левому плечу.
-  const [neckX, neckY] = neckBottom()
-  shape.quadraticCurveTo(neckX, neckY, startX, startY)
-
-  const geometry = new ExtrudeGeometry(shape, {
-    depth: DEPTH,
-    bevelEnabled: true,
-    bevelSize: 0.05,
-    bevelThickness: 0.05,
-    bevelSegments: 6,
-    curveSegments: 32,
-  })
-
-  const position = geometry.attributes.position as BufferAttribute
-  for (let i = 0; i < position.count; i++) {
-    const x = position.getX(i)
-    const y = position.getY(i)
-    const z = position.getZ(i)
-
-    // Грудь полнее краёв, по полотну идут две мягкие складки.
-    const chest = (1 - Math.min(1, (x / SHIRT.sleeveX) ** 2)) * 0.18
-    const folds = Math.cos(x * 2.1) * 0.022 + Math.sin(y * 1.5 + x * 0.5) * 0.018
-    position.setZ(i, z + chest + folds)
-  }
-  position.needsUpdate = true
-
-  const smoothed = mergeVertices(geometry, 1e-4)
-  smoothed.computeVertexNormals()
-  smoothed.center()
-
-  return smoothed
-}
 
 type Props = {
   tokens: SceneTokens
   printUrl: string | null
-  progress?: { value: number }
 }
 
 export default function ShirtScene({ tokens, printUrl }: Props) {
@@ -75,47 +20,40 @@ export default function ShirtScene({ tokens, printUrl }: Props) {
   const dragging = useRef(false)
   const lastX = useRef(0)
 
-  const geometry = useMemo(buildGeometry, [])
+  const geometry = useMemo(buildShirtGeometry, [])
   const print = useLoader(TextureLoader, printUrl ?? BLANK)
 
   const [cloth, logo] = useMemo(() => {
     // Чёрная вещь в ноль не даёт теням разойтись: настоящая чёрная футболка
     // на свету всё равно светлее краски.
-    const base = new Color(tokens.fg).lerp(new Color(tokens.bg), 0.05)
-    // Логотип на чёрной футболке не печатают чёрным в ноль: он читается
-    // тоном, как вышивка на фотографии.
-    return [base, base.clone().lerp(new Color(tokens.bg), 0.3)]
+    const base = new Color(tokens.fg).lerp(new Color(tokens.bg), 0.07)
+    // Логотип на чёрном не печатают чёрным в ноль: он читается тоном, как
+    // вышивка на фотографии дропа.
+    return [base, base.clone().lerp(new Color(tokens.bg), 0.34)]
   }, [tokens.fg, tokens.bg])
 
-  useFrame((state, delta) => {
+  // Принт лежит на груди, чуть впереди поверхности ткани.
+  const chestZ = torsoProfile(0.78).rz + 0.03
+
+  useFrame((_, delta) => {
     const g = group.current
-    if (!g) return
-
-    if (taken.current) {
-      // Взяли в руки — крутит только человек.
-      g.rotation.y += 0
-      return
-    }
-
-    // Не полный оборот, а покачивание: на полном обороте выдавленная
-    // геометрия показывает плоский торец и перестаёт быть похожей на ткань.
-    g.rotation.y = Math.sin(state.clock.elapsedTime * AUTO_SPIN) * 0.45
-    g.rotation.x = Math.sin(state.clock.elapsedTime * AUTO_SPIN * 0.7) * 0.08
-    void delta
+    if (!g || taken.current) return
+    g.rotation.y += delta * AUTO_SPIN
   })
 
   return (
     <>
-      <ambientLight intensity={0.35} />
-      {/* Ключевой свет сверху-справа, заполняющий слева и контровой сзади:
-          без них чёрная вещь остаётся силуэтом без формы. */}
-      <directionalLight position={[4, 5, 6]} intensity={1.5} />
-      <directionalLight position={[-5, 1, 3]} intensity={0.5} />
-      <directionalLight position={[0, 2, -6]} intensity={0.9} />
+      <ambientLight intensity={0.4} />
+      {/* Ключевой свет сверху-справа, заполняющий слева, контровой сзади:
+          без контрового чёрная вещь сливается в силуэт. */}
+      <directionalLight position={[4, 5, 6]} intensity={1.7} />
+      <directionalLight position={[-5, 1.5, 3]} intensity={0.55} />
+      <directionalLight position={[0, 3, -6]} intensity={1.1} />
 
       <group
         ref={group}
-        scale={1.9}
+        scale={1.42}
+        rotation={[0.06, -0.3, 0]}
         onPointerDown={(e) => {
           taken.current = true
           dragging.current = true
@@ -123,28 +61,25 @@ export default function ShirtScene({ tokens, printUrl }: Props) {
         }}
         onPointerMove={(e) => {
           if (!dragging.current || !group.current) return
-          group.current.rotation.y = clampSpin(
-            group.current.rotation.y + (e.nativeEvent.clientX - lastX.current) * DRAG_SENSITIVITY,
-          )
+          group.current.rotation.y += (e.nativeEvent.clientX - lastX.current) * DRAG_SENSITIVITY
           lastX.current = e.nativeEvent.clientX
         }}
         onPointerUp={() => {
           dragging.current = false
         }}
       >
-        <mesh geometry={geometry} castShadow>
-          <meshStandardMaterial color={cloth} roughness={0.78} metalness={0.04} side={DoubleSide} />
+        <mesh geometry={geometry}>
+          <meshStandardMaterial color={cloth} roughness={0.84} metalness={0.03} side={DoubleSide} />
         </mesh>
 
         {printUrl && (
-          <mesh position={[0, 0.28, DEPTH / 2 + 0.18]}>
+          <mesh position={[0, 0.18, chestZ]}>
             <planeGeometry args={[0.92, 0.2]} />
             <meshStandardMaterial
               map={print}
               color={logo}
               transparent
-              roughness={0.75}
-              // Текстура даёт только форму букв, цвет берётся тоном от ткани.
+              roughness={0.7}
               alphaTest={0.35}
             />
           </mesh>

@@ -2,5 +2,9 @@ import { pickTeeSource } from './pickTeeSource'
 
 it('берёт модель, когда путь задан', () =>
   expect(pickTeeSource('/models/tee.glb')).toEqual({ kind: 'model', url: '/models/tee.glb' }))
-it('падает в ткань, когда модели нет', () => expect(pickTeeSource(null)).toEqual({ kind: 'fabric' }))
-it('падает в ткань на пустой строке', () => expect(pickTeeSource('')).toEqual({ kind: 'fabric' }))
+
+it('без модели показывает футболку, собранную в сцене', () =>
+  expect(pickTeeSource(null)).toEqual({ kind: 'shirt' }))
+
+it('пустая строка тоже означает отсутствие модели', () =>
+  expect(pickTeeSource('')).toEqual({ kind: 'shirt' }))

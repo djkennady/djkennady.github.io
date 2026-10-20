@@ -3,7 +3,7 @@ import { useFrame, useLoader } from '@react-three/fiber'
 import { TextureLoader, type Group, type Mesh, type MeshStandardMaterial } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import type { SceneProps } from './Canvas3D'
-import ShirtScene from './ShirtScene'
+import FabricScene from './FabricScene'
 import { SceneBoundary } from './SceneBoundary'
 import { pickTeeSource } from './pickTeeSource'
 import { BLANK } from './blankTexture'
@@ -77,18 +77,18 @@ function Tee({ url, printUrl }: { url: string; printUrl: string | null }) {
 }
 
 export default function TeeScene({
+  settings,
   tokens,
   modelUrl,
   printUrl,
 }: SceneProps & { modelUrl: string | null; printUrl: string | null }) {
   const source = pickTeeSource(modelUrl)
-  const shirt = <ShirtScene tokens={tokens} printUrl={printUrl} />
+  const fabric = <FabricScene settings={settings} tokens={tokens} textureUrl={printUrl ?? undefined} />
 
-  if (source.kind === 'shirt') return shirt
+  if (source.kind === 'fabric') return fabric
 
-  // Модель может не скачаться — тогда остаётся футболка из сцены.
   return (
-    <SceneBoundary fallback={shirt}>
+    <SceneBoundary fallback={fabric}>
       <Tee url={source.url} printUrl={printUrl} />
     </SceneBoundary>
   )

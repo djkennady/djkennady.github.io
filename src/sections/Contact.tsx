@@ -6,9 +6,11 @@ import type { Content } from '../content/types'
 const big: React.CSSProperties = {
   color: 'var(--fg)',
   textDecoration: 'none',
-  // Почта длинная, а шрифт крупный: без переноса она вылезает за экран на 320.
-  fontSize: 'clamp(1.0625rem, 4.4vw, 4rem)',
-  overflowWrap: 'anywhere',
+  // Почта длинная, а шрифт крупный. Переносим по осмысленным местам, а не
+  // по букве: «...GMAIL.CO / M» выглядит как ошибка вёрстки.
+  fontSize: 'clamp(1rem, 3.4vw, 3.25rem)',
+  overflowWrap: 'break-word',
+  wordBreak: 'normal',
   minWidth: 0,
 }
 
@@ -27,9 +29,10 @@ export function Contact({ data, ui }: { data: Content['contact']; ui: Content['u
     <div
       style={{
         display: 'flex',
+        flexWrap: 'wrap',
         alignItems: 'baseline',
         justifyContent: 'space-between',
-        gap: '1em',
+        gap: '0.75em 1em',
         padding: 'clamp(16px, 3vh, 32px) 0',
         borderBottom: '1px solid var(--line)',
       }}
@@ -42,11 +45,10 @@ export function Contact({ data, ui }: { data: Content['contact']; ui: Content['u
         data-testid={testId}
         aria-label={`${ui.copy}: ${value}`}
         onClick={() => void copy(value)}
-        className="mono"
+        className="mono frame"
         style={{
           appearance: 'none',
           background: 'none',
-          border: '1px solid var(--line)',
           color: 'var(--muted)',
           padding: '0.6em 1em',
           cursor: 'pointer',
@@ -54,7 +56,7 @@ export function Contact({ data, ui }: { data: Content['contact']; ui: Content['u
           flex: 'none',
         }}
       >
-        ↗
+        {ui.copy}
       </button>
     </div>
   )

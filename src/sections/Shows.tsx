@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Media } from '../components/Media'
 import { SectionHeading } from '../components/SectionHeading'
 import { useReducedMotion } from '../lib/useReducedMotion'
+import { splitShows } from '../lib/splitShows'
 import type { Content, Show } from '../content/types'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -16,13 +17,21 @@ function date(iso: string): string {
   return `${d}.${m}.${y}`
 }
 
-function ShowList({ items, testId }: { items: Show[]; testId?: string }) {
+function ShowList({
+  items,
+  testId,
+  upcoming = false,
+}: {
+  items: Show[]
+  testId?: string
+  upcoming?: boolean
+}) {
   return (
     <ul data-testid={testId} style={{ listStyle: 'none', margin: 0, padding: 0 }}>
       {items.map((s) => (
         <li
           key={`${s.date}-${s.venue}`}
-          className={`mono show-row${s.upcoming ? ' is-upcoming' : ''}`}
+          className={`mono show-row${upcoming ? ' is-upcoming' : ''}`}
         >
           <span>{date(s.date)}</span>
           <span>{s.city}</span>
@@ -38,8 +47,9 @@ export function Shows({ data, index = '02' }: { data: Content['shows']; index?: 
   const track = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
 
-  const upcoming = data.list.filter((s) => s.upcoming)
-  const past = data.list.filter((s) => !s.upcoming)
+  // Что предстоит, а что прошло, решает сегодняшнее число, а не пометка в
+  // файле: иначе просроченные даты продолжают висеть как ближайшие.
+  const { upcoming, past } = splitShows(data.list, new Date())
 
   // Лента едет вбок по вертикальному скроллу. Закрепление сделано на
   // position: sticky, а не на pin из ScrollTrigger: pin оборачивает узел в
@@ -126,7 +136,7 @@ export function Shows({ data, index = '02' }: { data: Content['shows']; index?: 
         <div className="shell" style={{ paddingBlock: 'var(--rhythm)' }}>
           {upcoming.length > 0 && (
             <div style={{ marginBottom: 'clamp(32px, 6vh, 80px)' }}>
-              <ShowList items={upcoming} testId="upcoming" />
+              <ShowList items={upcoming} testId="upcoming" upcoming />
             </div>
           )}
           {past.length > 0 && <ShowList items={past} />}

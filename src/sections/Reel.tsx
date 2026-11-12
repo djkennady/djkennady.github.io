@@ -30,7 +30,12 @@ export function Reel({ data, ui }: { data: Content['reel']; ui: Content['ui'] })
     return (
       <section id="reel">
         <div
-          style={{ width: '100%', aspectRatio: '9 / 16', maxHeight: '85svh', background: 'var(--line)' }}
+          style={{
+            width: '100%',
+            aspectRatio: '9 / 16',
+            maxHeight: '85svh',
+            background: 'var(--line)',
+          }}
         />
       </section>
     )
@@ -46,41 +51,44 @@ export function Reel({ data, ui }: { data: Content['reel']; ui: Content['ui'] })
         paddingBlock: 'var(--rhythm)',
       }}
     >
-      <video
-        ref={video}
-        data-testid="reel-video"
-        src={data.src}
-        poster={data.poster}
-        muted={muted}
-        loop
-        playsInline
-        autoPlay={!reduced}
-        controls={reduced}
-        onError={() => setBroken(true)}
-        // Съёмка вертикальная: вписываем целиком, а не обрезаем по бокам.
-        style={{ width: 'auto', maxWidth: '100%', maxHeight: '85svh', display: 'block' }}
-      />
+      <div style={{ position: 'relative', display: 'inline-block', maxWidth: '100%' }}>
+        <video
+          ref={video}
+          data-testid="reel-video"
+          src={data.src}
+          poster={data.poster}
+          muted={muted}
+          loop
+          playsInline
+          autoPlay={!reduced}
+          controls={reduced}
+          onError={() => setBroken(true)}
+          // Съёмка вертикальная: вписываем целиком, а не обрезаем по бокам.
+          style={{ width: 'auto', maxWidth: '100%', maxHeight: '85svh', display: 'block' }}
+        />
 
-      <button
-        type="button"
-        data-magnet
-        onClick={() => setMuted((m) => !m)}
-        className="mono"
-        style={{
-          position: 'absolute',
-          right: 'var(--gutter)',
-          bottom: 'var(--gutter)',
-          appearance: 'none',
-          background: 'var(--bg)',
-          border: '1px solid var(--line)',
-          color: 'var(--fg)',
-          padding: '0.8em 1.4em',
-          cursor: 'pointer',
-          font: 'inherit',
-        }}
-      >
-        {muted ? ui.soundOn : ui.soundOff}
-      </button>
+        <button
+          type="button"
+          data-magnet
+          onClick={() => setMuted((m) => !m)}
+          className="mono"
+          style={{
+            position: 'absolute',
+            right: 'clamp(12px, 2vw, 24px)',
+            bottom: 'clamp(12px, 2vw, 24px)',
+            appearance: 'none',
+            background: 'color-mix(in srgb, var(--bg) 72%, transparent)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid var(--line)',
+            color: 'var(--fg)',
+            padding: '0.8em 1.4em',
+            cursor: 'pointer',
+            font: 'inherit',
+          }}
+        >
+          {muted ? ui.soundOn : ui.soundOff}
+        </button>
+      </div>
     </section>
   )
 }

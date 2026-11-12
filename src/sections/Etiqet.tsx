@@ -32,7 +32,7 @@ export function Etiqet({
           interactive
           scene={TeeScene}
           sceneProps={{ modelUrl: data.model, printUrl: data.print }}
-          fallbackSrc="/fallback/tee.webp"
+          fallbackSrc="/fallback/tee.jpg"
           fallbackAlt=""
         />
       </div>

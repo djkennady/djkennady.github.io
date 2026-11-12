@@ -14,7 +14,15 @@ const big: React.CSSProperties = {
   minWidth: 0,
 }
 
-export function Contact({ data, ui }: { data: Content['contact']; ui: Content['ui'] }) {
+export function Contact({
+  data,
+  ui,
+  facts,
+}: {
+  data: Content['contact']
+  ui: Content['ui']
+  facts: Content['manifesto']['facts']
+}) {
   const [copied, setCopied] = useState<string | null>(null)
 
   const copy = async (value: string) => {
@@ -64,6 +72,28 @@ export function Contact({ data, ui }: { data: Content['contact']; ui: Content['u
   return (
     <section id="contact" className="section">
       <div className="shell">
+        {/* Цифры повторяются у самой кнопки: человек решает писать или нет
+            здесь, а не там, где он читал манифест. */}
+        {facts.length > 0 && (
+          <p
+            className="mono"
+            data-testid="proof"
+            style={{
+              color: 'var(--muted)',
+              margin: '0 0 clamp(20px, 4vh, 48px)',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.6em 1.6em',
+            }}
+          >
+            {facts.map((f) => (
+              <span key={f.label}>
+                {f.value} {f.label}
+              </span>
+            ))}
+          </p>
+        )}
+
         {row(data.bookingEmail, `mailto:${data.bookingEmail}`, 'copy-email')}
         {row(data.telegram, `https://t.me/${data.telegram.replace('@', '')}`, 'copy-telegram')}
 

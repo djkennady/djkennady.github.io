@@ -5,9 +5,10 @@ import { content } from '../content/content'
 const data = content.ru.etiqet
 const ui = content.ru.ui
 
-it('кнопка ведёт в Instagram бренда', () => {
+it('кнопка зовёт к действию и ведёт в Instagram бренда', () => {
   render(<Etiqet data={data} ui={ui} />)
-  const link = screen.getByRole('link', { name: /instagram/i })
+  // Подпись — это призыв («забронировать»), а не название соцсети.
+  const link = screen.getByRole('link', { name: data.cta })
   expect(link).toHaveAttribute('href', data.instagramUrl)
   expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'))
 })
@@ -20,5 +21,5 @@ it('вещь без цены показывает строку «по запро
 
 it('пустой список вещей оставляет блок с 3D и ссылкой', () => {
   render(<Etiqet data={{ ...data, items: [] }} ui={ui} />)
-  expect(screen.getByRole('link', { name: /instagram/i })).toBeInTheDocument()
+  expect(screen.getByRole('link', { name: data.cta })).toBeInTheDocument()
 })

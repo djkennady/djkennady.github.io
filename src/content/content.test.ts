@@ -26,3 +26,20 @@ it('все ссылки абсолютные или mailto', () => {
   ]
   for (const u of urls) expect(u).toMatch(/^(https?:\/\/|mailto:)/)
 })
+
+it('списки в обеих локалях одной длины', () => {
+  // Самая частая ошибка при ручной правке: добавил дату в русский блок и
+  // забыл в английский. Тогда на английской версии её просто нет.
+  expect(content.ru.shows.list.length).toBe(content.en.shows.list.length)
+  expect(content.ru.shows.shots.length).toBe(content.en.shows.shots.length)
+  expect(content.ru.music.tracks.length).toBe(content.en.music.tracks.length)
+  expect(content.ru.etiqet.items.length).toBe(content.en.etiqet.items.length)
+  expect(content.ru.manifesto.lines.length).toBe(content.en.manifesto.lines.length)
+  expect(content.ru.manifesto.facts.length).toBe(content.en.manifesto.facts.length)
+})
+
+it('даты записаны как ГГГГ-ММ-ДД, иначе сортировка врёт', () => {
+  for (const show of [...content.ru.shows.list, ...content.en.shows.list]) {
+    expect(show.date, show.venue).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+  }
+})

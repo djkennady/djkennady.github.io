@@ -95,9 +95,22 @@ export function Hero({ data, ui, lang, onLang }: Props) {
           <h1 className="display display-xl" style={{ fontSize: 'clamp(3rem, 12vw, 11rem)', margin: 0 }}>
             {data.name}
           </h1>
+          {/* Главное обещание идёт сразу за именем: промоутер должен понять
+              ценность раньше, чем дочитает, как меня зовут. */}
+          <p
+            style={{
+              maxWidth: '18ch',
+              margin: '0.6em 0 0',
+              fontSize: 'clamp(1.125rem, 2.1vw, 1.875rem)',
+              lineHeight: 1.2,
+            }}
+          >
+            {data.tagline}
+          </p>
+
           <p
             className="mono"
-            style={{ color: 'var(--muted)', margin: '1.2em 0 0', display: 'flex', gap: '1.5em' }}
+            style={{ color: 'var(--muted)', margin: '1.4em 0 0', display: 'flex', gap: '1.5em' }}
           >
             <span>{data.realName}</span>
             <span>{data.city}</span>

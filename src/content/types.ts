@@ -34,7 +34,16 @@ export type Content = {
     soundOff: string
     scrollHint: string
   }
-  hero: { name: string; realName: string; city: string; ctaBooking: string; ctaBrand: string }
+  hero: {
+    name: string
+    /** Одна строка о том, что человек получает, а не кто ты по паспорту.
+     *  Главный продающий элемент страницы после имени. */
+    tagline: string
+    realName: string
+    city: string
+    ctaBooking: string
+    ctaBrand: string
+  }
   manifesto: { lines: string[]; facts: { value: string; label: string }[] }
   music: { title: string; tracks: Track[] }
   shows: { title: string; shots: Shot[]; list: Show[] }
@@ -42,6 +51,8 @@ export type Content = {
     title: string
     text: string
     instagramUrl: string
+    /** Призыв на кнопке бренда: не «инстаграм», а действие. */
+    cta: string
     /** GLB-модель футболки и файл принта. null — штатное состояние: сцена
      *  тогда показывает ткань и не пытается грузить несуществующий файл. */
     model: string | null

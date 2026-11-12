@@ -88,7 +88,7 @@ export function Etiqet({
             textDecoration: 'none',
           }}
         >
-          Instagram ETIQET
+          {data.cta}
         </a>
       </div>
     </section>

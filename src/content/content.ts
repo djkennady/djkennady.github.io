@@ -12,9 +12,10 @@ export const content: Record<Lang, Content> = {
     },
     hero: {
       name: 'DJ Kennady',
+      tagline: 'Собираю танцпол и одеваю его.',
       realName: 'Егор Морозов',
       city: 'Набережные Челны',
-      ctaBooking: 'Букинг',
+      ctaBooking: 'Позвать на вечер',
       ctaBrand: 'ETIQET',
     },
     manifesto: {
@@ -34,7 +35,7 @@ export const content: Record<Lang, Content> = {
       tracks: [],
     },
     shows: {
-      title: 'Где играл',
+      title: 'Живьём',
       shots: [
         {
           src: '/media/booth.jpg',
@@ -64,6 +65,7 @@ export const content: Record<Lang, Content> = {
       title: 'ETIQET',
       text: 'Минимализм, качество, стиль. 100% хлопок, ограниченное количество, первые партии уже скоро. ETIQET — не просто одежда, это напоминание.',
       instagramUrl: 'https://www.instagram.com/dj_kennady/',
+      cta: 'Забронировать футболку',
       model: null,
       print: '/media/etiqet-wordmark.png',
       items: [
@@ -104,9 +106,10 @@ export const content: Record<Lang, Content> = {
     },
     hero: {
       name: 'DJ Kennady',
+      tagline: 'I fill the floor and I dress it.',
       realName: 'Egor Morozov',
       city: 'Naberezhnye Chelny',
-      ctaBooking: 'Booking',
+      ctaBooking: 'Book a night',
       ctaBrand: 'ETIQET',
     },
     manifesto: {
@@ -126,7 +129,7 @@ export const content: Record<Lang, Content> = {
       tracks: [],
     },
     shows: {
-      title: 'Played at',
+      title: 'Live',
       shots: [
         {
           src: '/media/booth.jpg',
@@ -156,6 +159,7 @@ export const content: Record<Lang, Content> = {
       title: 'ETIQET',
       text: 'Minimalism, quality, style. 100% cotton, limited edition, first batches coming soon. ETIQET is not just clothing, it is a reminder.',
       instagramUrl: 'https://www.instagram.com/dj_kennady/',
+      cta: 'Reserve a tee',
       model: null,
       print: '/media/etiqet-wordmark.png',
       items: [

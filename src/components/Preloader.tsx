@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from '../lib/useReducedMotion'
-import { DUR } from '../lib/motion'
 import { PRELOADER_TIMEOUT_MS, preloaderDone } from './preloaderDone'
+
+const FADE_MS = 700
 
 /** Счётчик 0 → 100, пока грузятся шрифты. Уходит по готовности шрифтов или по
  *  таймауту — что раньше, — и ни при каких обстоятельствах не запирает
@@ -10,6 +11,8 @@ export function Preloader({ onDone }: { onDone: () => void }) {
   const reduced = useReducedMotion()
   const [progress, setProgress] = useState(0)
   const [gone, setGone] = useState(() => preloaderDone(false, 0, reduced))
+  // Экран не выдёргивается рывком: сначала гаснет, потом снимается.
+  const [removed, setRemoved] = useState(false)
   const notified = useRef(false)
 
   // Отдельным эффектом и под флагом: иначе повторный проход эффекта после
@@ -19,6 +22,12 @@ export function Preloader({ onDone }: { onDone: () => void }) {
     notified.current = true
     onDone()
   }, [gone, onDone])
+
+  useEffect(() => {
+    if (!gone) return
+    const t = window.setTimeout(() => setRemoved(true), FADE_MS)
+    return () => window.clearTimeout(t)
+  }, [gone])
 
   useEffect(() => {
     if (gone) return
@@ -50,7 +59,7 @@ export function Preloader({ onDone }: { onDone: () => void }) {
     return () => cancelAnimationFrame(raf)
   }, [gone, reduced])
 
-  if (gone) return null
+  if (removed) return null
 
   return (
     <div
@@ -64,7 +73,9 @@ export function Preloader({ onDone }: { onDone: () => void }) {
         color: 'var(--fg)',
         display: 'grid',
         placeItems: 'center',
-        transition: `opacity ${DUR.fast}s linear`,
+        opacity: gone ? 0 : 1,
+        pointerEvents: gone ? 'none' : 'auto',
+        transition: `opacity ${FADE_MS}ms cubic-bezier(0.4, 0, 0.2, 1)`,
       }}
     >
       <div style={{ display: 'grid', justifyItems: 'center', gap: 'clamp(20px, 4vh, 44px)' }}>

@@ -8,9 +8,9 @@ const data = content.ru.shows
 // Даты держим свои: в контенте их может не быть вовсе, пока Егор не прислал
 // настоящие, и тесты не должны от этого зависеть.
 const list: Show[] = [
-  { date: '2026-11-07', city: 'Набережные Челны', venue: 'NEFTЬ', upcoming: true },
-  { date: '2026-09-27', city: 'Казань', venue: 'Werk', upcoming: false },
-  { date: '2026-08-16', city: 'Москва', venue: 'Арма', upcoming: false },
+  { date: '2099-11-07', city: 'Набережные Челны', venue: 'NEFTЬ' },
+  { date: '2020-09-27', city: 'Казань', venue: 'Werk' },
+  { date: '2020-08-16', city: 'Москва', venue: 'Арма' },
 ]
 
 it('разделяет предстоящие и прошедшие даты', () => {
@@ -19,7 +19,9 @@ it('разделяет предстоящие и прошедшие даты', (
 })
 
 it('без предстоящих дат не показывает блок предстоящих', () => {
-  const past = list.map((s) => ({ ...s, upcoming: false }))
+  // Все даты в прошлом — блока предстоящих быть не должно. Раньше это
+  // решал флаг в контенте, и просроченные даты висели как ближайшие.
+  const past = list.filter((s) => s.date < '2026-01-01')
   render(<Shows data={{ ...data, list: past }} />)
   expect(screen.queryByTestId('upcoming')).toBeNull()
 })

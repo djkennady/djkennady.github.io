@@ -56,9 +56,8 @@ export const content: Record<Lang, Content> = {
           date: '2026-10-23',
           city: 'Набережные Челны',
           venue: 'LAKI · вечеринка MTV',
-          upcoming: true,
         },
-        { date: '2026-10-24', city: 'Набережные Челны', venue: 'The Bird', upcoming: true },
+        { date: '2026-10-24', city: 'Набережные Челны', venue: 'The Bird' },
       ],
     },
     etiqet: {
@@ -149,9 +148,8 @@ export const content: Record<Lang, Content> = {
           date: '2026-10-23',
           city: 'Naberezhnye Chelny',
           venue: 'LAKI · MTV party',
-          upcoming: true,
         },
-        { date: '2026-10-24', city: 'Naberezhnye Chelny', venue: 'The Bird', upcoming: true },
+        { date: '2026-10-24', city: 'Naberezhnye Chelny', venue: 'The Bird' },
       ],
     },
     etiqet: {

@@ -21,7 +21,6 @@ type Props = {
 const link: React.CSSProperties = {
   display: 'inline-block',
   padding: '0.9em 1.6em',
-  border: '1px solid var(--line)',
   color: 'var(--fg)',
   textDecoration: 'none',
 }
@@ -60,7 +59,7 @@ export function Hero({ data, ui, lang, onLang }: Props) {
       <Canvas3D
         scene={FabricScene}
         sceneProps={{ progress: heroProgress }}
-        fallbackSrc="/fallback/hero.webp"
+        fallbackSrc="/fallback/hero.jpg"
         fallbackAlt=""
       />
 
@@ -93,7 +92,7 @@ export function Hero({ data, ui, lang, onLang }: Props) {
         </div>
 
         <div>
-          <h1 className="display" style={{ fontSize: 'clamp(3rem, 12vw, 11rem)', margin: 0 }}>
+          <h1 className="display display-xl" style={{ fontSize: 'clamp(3rem, 12vw, 11rem)', margin: 0 }}>
             {data.name}
           </h1>
           <p
@@ -105,10 +104,10 @@ export function Hero({ data, ui, lang, onLang }: Props) {
           </p>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: 'clamp(24px, 4vh, 48px)' }}>
-            <a className="mono" href="#contact" style={link} data-magnet>
+            <a className="mono frame" href="#contact" style={link} data-magnet>
               {data.ctaBooking}
             </a>
-            <a className="mono" href="#etiqet" style={link} data-magnet>
+            <a className="mono frame" href="#etiqet" style={link} data-magnet>
               {data.ctaBrand}
             </a>
           </div>

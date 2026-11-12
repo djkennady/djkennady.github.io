@@ -11,7 +11,7 @@ export type Track = {
   poster: string
 }
 
-export type Show = { date: string; city: string; venue: string; upcoming: boolean }
+export type Show = { date: string; city: string; venue: string }
 
 export type Item = {
   name: string

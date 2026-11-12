@@ -75,9 +75,17 @@ body {
   .display {
     font-family: var(--font-display);
     font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 0.88;
+    letter-spacing: -0.035em;
+    line-height: 0.9;
     text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  /* Чем крупнее набор, тем плотнее он должен стоять: на кегле в десяток
+     сантиметров межбуквенное, нормальное для текста, выглядит рыхло. */
+  .display-xl {
+    letter-spacing: -0.055em;
+    line-height: 0.82;
   }
 
   .mono {
@@ -86,6 +94,7 @@ body {
     font-size: clamp(0.6875rem, 0.8vw, 0.8125rem);
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
   }
 
   .shell {
@@ -129,6 +138,16 @@ body {
     color: var(--fg);
   }
 
+  /* Строка подсвечивается под курсором: список дат — живая вещь, а не
+     таблица. */
+  .show-row {
+    transition: color 0.25s ease;
+  }
+
+  .show-row:hover {
+    color: var(--fg);
+  }
+
   .show-row > :last-child {
     grid-column: 2;
     color: var(--muted);
@@ -158,5 +177,33 @@ body {
     font-size: clamp(2rem, 6vw, 5rem);
     margin-bottom: 0.4em;
     color: var(--fg);
+  }
+}
+
+@layer components {
+  /* Ссылки подчёркиваются не вплотную к буквам, а с отступом: так набор
+     остаётся читаемым, а подчёркивание выглядит нарисованным, а не
+     браузерным. */
+  a:not(.display) {
+    text-underline-offset: 0.35em;
+    text-decoration-thickness: 1px;
+    transition: color 0.25s ease, opacity 0.25s ease;
+  }
+
+  a.mono:hover {
+    color: var(--fg);
+  }
+
+  button {
+    transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+  }
+
+  /* Рамки у кнопок подтягиваются под курсором вместо резкой смены цвета. */
+  .frame {
+    border: 1px solid var(--line);
+  }
+
+  .frame:hover {
+    border-color: var(--fg);
   }
 }

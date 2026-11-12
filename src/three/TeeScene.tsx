@@ -1,17 +1,34 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useLoader } from '@react-three/fiber'
-import { TextureLoader, type Group, type Mesh, type MeshStandardMaterial } from 'three'
+import {
+  Box3,
+  Color,
+  ShaderMaterial,
+  TextureLoader,
+  type Group,
+  type Mesh,
+  type Object3D,
+} from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import type { SceneProps } from './Canvas3D'
 import FabricScene from './FabricScene'
+import GlyphRain from './GlyphRain'
 import { SceneBoundary } from './SceneBoundary'
 import { pickTeeSource } from './pickTeeSource'
+import { revealFragment, revealVertex } from './reveal.glsl'
+import { REVEAL_BAND, REVEAL_DURATION, revealDensity } from './revealSettings'
+import { revealFront, revealGlow } from './revealProgress'
 import { BLANK } from './blankTexture'
 
 const AUTO_SPIN = 0.25
 const DRAG_SENSITIVITY = 0.01
 
-function Tee({ url, printUrl }: { url: string; printUrl: string | null }) {
+function Tee({
+  url,
+  printUrl,
+  settings,
+  tokens,
+}: SceneProps & { url: string; printUrl: string | null }) {
   const { scene } = useLoader(GLTFLoader, url)
   // Загрузчик нельзя звать условно: без принта берём прозрачный пиксель.
   const print = useLoader(TextureLoader, printUrl ?? BLANK)
@@ -19,17 +36,51 @@ function Tee({ url, printUrl }: { url: string; printUrl: string | null }) {
   const taken = useRef(false)
   const dragging = useRef(false)
   const lastX = useRef(0)
+  const elapsed = useRef(0)
+
+  // useLoader держит загруженную сцену в своём кеше и отдаёт тот же объект
+  // при повторном монтировании. Материалы вешаем на копию, иначе сцена из
+  // кеша осталась бы со ссылкой на материал, который мы уже уничтожили.
+  const model = useMemo(() => scene.clone(true), [scene])
+
+  const material = useMemo(
+    () =>
+      new ShaderMaterial({
+        vertexShader: revealVertex,
+        fragmentShader: revealFragment,
+        transparent: true,
+        // Модель просвечивает сама себя: спина читается сквозь грудь, и это
+        // и даёт голограмму вместо плотного силуэта.
+        depthWrite: false,
+        uniforms: {
+          uFg: { value: new Color(tokens.fg) },
+          uTime: { value: 0 },
+          uFront: { value: 0 },
+          uGlow: { value: 1 },
+          uBand: { value: REVEAL_BAND },
+          uDensity: { value: revealDensity(settings) },
+          uPrint: { value: print },
+          uHasPrint: { value: printUrl ? 1 : 0 },
+          uMinY: { value: 0 },
+          uMaxY: { value: 1 },
+        },
+      }),
+    [tokens.fg, settings, print, printUrl],
+  )
+
+  useEffect(() => () => material.dispose(), [material])
 
   useEffect(() => {
-    if (!printUrl) return
-    scene.traverse((o) => {
+    // Габарит в мировых координатах — в них же шейдер считает высоту точки.
+    const box = new Box3().setFromObject(model)
+    material.uniforms.uMinY.value = box.min.y
+    material.uniforms.uMaxY.value = box.max.y
+
+    model.traverse((o: Object3D) => {
       const mesh = o as Mesh
-      if (!mesh.isMesh) return
-      const material = mesh.material as MeshStandardMaterial
-      material.map = print
-      material.needsUpdate = true
+      if (mesh.isMesh) mesh.material = material
     })
-  }, [scene, print, printUrl])
+  }, [model, material])
 
   // Слушаем окно, а не меш: палец или курсор может уйти за пределы модели,
   // и вращение не должно на этом обрываться.
@@ -54,25 +105,30 @@ function Tee({ url, printUrl }: { url: string; printUrl: string | null }) {
   }, [])
 
   useFrame((_, delta) => {
-    if (taken.current || !group.current) return
-    group.current.rotation.y += delta * AUTO_SPIN
+    // Отсчёт идёт от монтирования сцены, а Canvas3D монтирует её в тот
+    // момент, когда до секции доскроллили. Отдельный триггер прохода не
+    // нужен: проявление и так начинается при входе секции в экран.
+    elapsed.current += delta
+
+    const u = material.uniforms
+    u.uTime.value = elapsed.current
+    u.uFront.value = revealFront(elapsed.current, REVEAL_DURATION)
+    u.uGlow.value = revealGlow(elapsed.current, REVEAL_DURATION)
+
+    if (!taken.current && group.current) group.current.rotation.y += delta * AUTO_SPIN
   })
 
   return (
-    <>
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[2, 4, 3]} intensity={1.2} />
-      <group
-        ref={group}
-        onPointerDown={(e) => {
-          taken.current = true
-          dragging.current = true
-          lastX.current = e.nativeEvent.clientX
-        }}
-      >
-        <primitive object={scene} />
-      </group>
-    </>
+    <group
+      ref={group}
+      onPointerDown={(e) => {
+        taken.current = true
+        dragging.current = true
+        lastX.current = e.nativeEvent.clientX
+      }}
+    >
+      <primitive object={model} />
+    </group>
   )
 }
 
@@ -83,13 +139,34 @@ export default function TeeScene({
   printUrl,
 }: SceneProps & { modelUrl: string | null; printUrl: string | null }) {
   const source = pickTeeSource(modelUrl)
-  const fabric = <FabricScene settings={settings} tokens={tokens} textureUrl={printUrl ?? undefined} />
 
-  if (source.kind === 'fabric') return fabric
+  // Дождь идёт за моделью в обеих ветках: он и есть тот фон, сквозь который
+  // видно непроявленную часть меша.
+  const rain = <GlyphRain settings={settings} tokens={tokens} />
+
+  const fabric = (
+    <FabricScene settings={settings} tokens={tokens} textureUrl={printUrl ?? undefined} reveal />
+  )
+
+  if (source.kind === 'fabric')
+    return (
+      <>
+        {rain}
+        {fabric}
+      </>
+    )
 
   return (
-    <SceneBoundary fallback={fabric}>
-      <Tee url={source.url} printUrl={printUrl} />
-    </SceneBoundary>
+    <>
+      {rain}
+      <SceneBoundary fallback={fabric}>
+        <Tee
+          url={source.url}
+          printUrl={printUrl}
+          settings={settings}
+          tokens={tokens}
+        />
+      </SceneBoundary>
+    </>
   )
 }

@@ -5,6 +5,8 @@ import { Color } from 'three'
 import type { SceneProps } from './Canvas3D'
 import { fabricFragment, fabricVertex } from './fabric.glsl'
 import { sceneAmplitude } from './fabricAmplitude'
+import { REVEAL_BAND, REVEAL_DURATION, revealDensity } from './revealSettings'
+import { revealFront, revealGlow } from './revealProgress'
 import { BLANK } from './blankTexture'
 
 const PLANE_W = 8
@@ -15,10 +17,18 @@ export default function FabricScene({
   tokens,
   textureUrl,
   progress,
-}: SceneProps & { textureUrl?: string; progress?: { value: number } }) {
+  reveal = false,
+}: SceneProps & {
+  textureUrl?: string
+  progress?: { value: number }
+  /** Матричное проявление. Выключено по умолчанию: полотно героя живёт без
+   *  него, включает только блок бренда. */
+  reveal?: boolean
+}) {
   const material = useRef<ShaderMaterial>(null)
   const texture = useLoader(TextureLoader, textureUrl ?? BLANK)
   const smoothed = useRef(new Vector2())
+  const elapsed = useRef(0)
 
   const segments = Math.max(16, settings.segments)
 
@@ -46,8 +56,22 @@ export default function FabricScene({
       uTexture: { value: texture },
       uHasTexture: { value: textureUrl ? 1 : 0 },
       uPrintScale: { value: printScale },
+      // Единица и ноль — это «проявление уже закончилось»: ровно то полотно,
+      // что было здесь до эффекта.
+      uFront: { value: 1 },
+      uGlow: { value: 0 },
+      uBand: { value: REVEAL_BAND },
+      uGlyph: { value: reveal ? 1 : 0 },
+      // Полотно 8x5, поэтому по X знаков во столько же раз больше: иначе
+      // ячейка выходит прямоугольной и знаки слипаются в сплошной текст.
+      uDensity: {
+        value: new Vector2(
+          revealDensity(settings) * (PLANE_W / PLANE_H),
+          revealDensity(settings),
+        ),
+      },
     }),
-    [texture, textureUrl, tokens.fg, tokens.bg, printScale],
+    [texture, textureUrl, tokens.fg, tokens.bg, printScale, reveal, settings],
   )
 
   useFrame((state, delta) => {
@@ -56,6 +80,12 @@ export default function FabricScene({
 
     u.uTime.value += delta
     u.uAmplitude.value = sceneAmplitude(progress)
+
+    if (reveal) {
+      elapsed.current += delta
+      u.uFront.value = revealFront(elapsed.current, REVEAL_DURATION)
+      u.uGlow.value = revealGlow(elapsed.current, REVEAL_DURATION)
+    }
 
     // Курсор догоняется плавно: резкий скачок полотна выглядит дёшево.
     smoothed.current.lerp(

@@ -43,7 +43,7 @@ export function App() {
       <Shows data={t.shows} index={sectionIndex(visible, 'shows')} />
       <Etiqet data={t.etiqet} ui={t.ui} index={sectionIndex(visible, 'etiqet')} />
       <Reel data={t.reel} ui={t.ui} />
-      <Contact data={t.contact} ui={t.ui} />
+      <Contact data={t.contact} ui={t.ui} facts={t.manifesto.facts} />
     </>
   )
 }

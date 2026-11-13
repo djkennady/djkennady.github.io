@@ -1,10 +1,7 @@
-import { lazy } from 'react'
-import { Canvas3D } from '../three/Canvas3D'
 import { Media } from '../components/Media'
 import { SectionHeading } from '../components/SectionHeading'
+import { EtiqetStage } from './EtiqetStage'
 import type { Content } from '../content/types'
-
-const TeeScene = lazy(() => import('../three/TeeScene'))
 
 export function Etiqet({
   data,
@@ -21,28 +18,26 @@ export function Etiqet({
         <SectionHeading index={index}>{data.title}</SectionHeading>
       </div>
 
-      <div
-        style={{
-          position: 'relative',
-          height: 'clamp(380px, 60vh, 720px)',
-          marginBottom: 'clamp(32px, 6vh, 80px)',
-        }}
-      >
-        <Canvas3D
-          interactive
-          scene={TeeScene}
-          sceneProps={{ modelUrl: data.model, printUrl: data.print }}
-          fallbackSrc="/fallback/tee.jpg"
-          fallbackAlt=""
-        />
-      </div>
+      <EtiqetStage data={data}>
+        <a
+          className="mono frame"
+          href={data.instagramUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-magnet
+          style={{
+            display: 'inline-block',
+            padding: '1em 1.8em',
+            color: 'var(--fg)',
+            textDecoration: 'none',
+          }}
+        >
+          {data.cta}
+        </a>
+      </EtiqetStage>
 
-      <div className="shell">
-        <p style={{ maxWidth: '46ch', fontSize: 'clamp(1.0625rem, 1.4vw, 1.375rem)' }}>
-          {data.text}
-        </p>
-
-        {data.items.length > 0 && (
+      {data.items.length > 0 && (
+        <div className="shell">
           <ul
             style={{
               listStyle: 'none',
@@ -60,7 +55,12 @@ export function Etiqet({
                   kind={item.kind}
                   alt={item.alt}
                   autoPlay
-                  style={{ width: '100%', aspectRatio: '4 / 5', objectFit: 'cover', display: 'block' }}
+                  style={{
+                    width: '100%',
+                    aspectRatio: '4 / 5',
+                    objectFit: 'cover',
+                    display: 'block',
+                  }}
                 />
                 <p className="mono" style={{ margin: '0.9em 0 0' }}>
                   {item.name}
@@ -71,26 +71,8 @@ export function Etiqet({
               </li>
             ))}
           </ul>
-        )}
-
-        <a
-          className="mono"
-          href={data.instagramUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-magnet
-          style={{
-            display: 'inline-block',
-            marginTop: 'clamp(32px, 5vh, 72px)',
-            padding: '1em 1.8em',
-            border: '1px solid var(--line)',
-            color: 'var(--fg)',
-            textDecoration: 'none',
-          }}
-        >
-          {data.cta}
-        </a>
-      </div>
+        </div>
+      )}
     </section>
   )
 }

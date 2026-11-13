@@ -63,7 +63,9 @@ export const content: Record<Lang, Content> = {
     },
     etiqet: {
       title: 'ETIQET',
-      text: 'Минимализм, качество, стиль. 100% хлопок, ограниченное количество, первые партии уже скоро. ETIQET — не просто одежда, это напоминание.',
+      slogan: 'Минимализм. Качество. Стиль.',
+      facts: ['100% хлопок', 'Ограниченный тираж', 'Первые партии уже скоро'],
+      closing: 'ETIQET — не просто одежда, это напоминание.',
       instagramUrl: 'https://www.instagram.com/dj_kennady/',
       cta: 'Забронировать футболку',
       model: null,
@@ -157,7 +159,9 @@ export const content: Record<Lang, Content> = {
     },
     etiqet: {
       title: 'ETIQET',
-      text: 'Minimalism, quality, style. 100% cotton, limited edition, first batches coming soon. ETIQET is not just clothing, it is a reminder.',
+      slogan: 'Minimalism. Quality. Style.',
+      facts: ['100% cotton', 'Limited edition', 'First batches coming soon'],
+      closing: 'ETIQET is not just clothing, it is a reminder.',
       instagramUrl: 'https://www.instagram.com/dj_kennady/',
       cta: 'Reserve a tee',
       model: null,

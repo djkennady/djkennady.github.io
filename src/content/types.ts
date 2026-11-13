@@ -49,7 +49,11 @@ export type Content = {
   shows: { title: string; shots: Shot[]; list: Show[] }
   etiqet: {
     title: string
-    text: string
+    /** Кадры презентации бренда: короткий слоган, условия дропа и
+     *  закрывающая строка с призывом. */
+    slogan: string
+    facts: string[]
+    closing: string
     instagramUrl: string
     /** Призыв на кнопке бренда: не «инстаграм», а действие. */
     cta: string
